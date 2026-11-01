@@ -1,0 +1,7 @@
+clinical_duckdb:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'data/clinical_warehouse.duckdb'
+      threads: 1

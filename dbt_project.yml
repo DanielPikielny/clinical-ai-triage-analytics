@@ -1,0 +1,23 @@
+name: 'clinical_triage_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'clinical_duckdb'
+
+model-paths: ["dbt_project/models"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  clinical_triage_analytics:
+    staging:
+      +schema: stg_clinical
+      +materialized: view
+    intermediate:
+      +schema: int_clinical
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table

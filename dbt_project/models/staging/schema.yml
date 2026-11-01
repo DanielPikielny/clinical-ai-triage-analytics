@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: raw_staging
+    schema: raw_staging
+    tables:
+      - name: raw_ai_scans
+
+models:
+  - name: stg_clinical_scans
+    description: "Cleaned staging view of AI triage scans."
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: clinical_priority
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['EMERGENCY', 'URGENT', 'ROUTINE']
+
+  - name: int_clinical_turnaround
+    description: "Intermediate model with AI classification and SLA metrics."
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: ai_detection_classification
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['TRUE_POSITIVE', 'FALSE_POSITIVE', 'FALSE_NEGATIVE', 'TRUE_NEGATIVE']
+
+  - name: fct_clinical_impact
+    description: "Marts table with aggregated clinical metrics by hospital site."
+    columns:
+      - name: total_scans
+        tests:
+          - not_null

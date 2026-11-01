@@ -1,0 +1,2231 @@
+[0m20:53:55.361355 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1917E270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1B7FFED0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1B7FFB10>]}
+
+
+============================== 20:53:55.367794 | 0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed ==============================
+[0m20:53:55.367794 [info ] [MainThread]: Running with dbt=1.12.6
+[0m20:53:55.368806 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'maximum_seed_size_mib': '1', 'printer_width': '80', 'write_json': 'True', 'empty': 'False', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'indirect_selection': 'eager', 'hints_enabled': 'True', 'invocation_command': 'dbt run --project-dir . --profiles-dir .', 'use_experimental_parser': 'False', 'use_colors': 'True', 'log_path': 'logs'}
+[0m20:53:55.731158 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C196B2190>]}
+[0m20:53:55.778095 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1B7D1480>]}
+[0m20:53:55.807385 [info ] [MainThread]: Registered adapter: duckdb=1.11.1
+[0m20:53:56.163075 [debug] [MainThread]: checksum: 785db5c24db5231b087101f2ff00a2a338bffa2a095b092b072185745ada8492, vars: {}, profile: aidoc_duckdb, target: dev, version: 1.12.6
+[0m20:53:56.164326 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m20:53:56.165255 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1BAB9150>]}
+[0m20:53:59.195924 [warn ] [MainThread]: [[33mWARNING[0m]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 2 unused configuration paths:
+- models.aidoc_analytics.intermediate
+- models.aidoc_analytics.marts
+[0m20:53:59.199364 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C18F23890>]}
+[0m20:53:59.262376 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m20:53:59.274950 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m20:53:59.311038 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m20:53:59.326928 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1C11B770>]}
+[0m20:53:59.327326 [info ] [MainThread]: Found 1 model, 1 source, 511 macros
+[0m20:53:59.327735 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1BFC2820>]}
+[0m20:53:59.329021 [info ] [MainThread]: 
+[0m20:53:59.329387 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m20:53:59.329631 [info ] [MainThread]: 
+[0m20:53:59.330089 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m20:53:59.330897 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse'
+[0m20:54:03.867298 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m20:54:03.867874 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m20:54:03.868268 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:54:03.922315 [debug] [ThreadPool]: SQL status: OK in 0.054 seconds
+[0m20:54:03.923307 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m20:54:03.923945 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse, now create_clinical_warehouse_main_stg_clinical)
+[0m20:54:03.924347 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_stg_clinical"
+"
+[0m20:54:03.928993 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m20:54:03.929214 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_stg_clinical"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m20:54:03.929390 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m20:54:03.931160 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m20:54:03.932055 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m20:54:03.932258 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: BEGIN
+[0m20:54:03.933035 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m20:54:03.933240 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m20:54:03.933404 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_stg_clinical"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_stg_clinical"
+    
+[0m20:54:03.933820 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m20:54:03.934355 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: COMMIT
+[0m20:54:03.934540 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m20:54:03.934711 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: COMMIT
+[0m20:54:03.937097 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m20:54:03.937380 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: Close
+[0m20:54:03.939289 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse_main_stg_clinical'
+[0m20:54:03.942620 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m20:54:03.942844 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: BEGIN
+[0m20:54:03.943006 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:54:03.943500 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m20:54:03.943699 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m20:54:03.943865 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_stg_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_stg_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m20:54:03.961828 [debug] [ThreadPool]: SQL status: OK in 0.018 seconds
+[0m20:54:03.962727 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: ROLLBACK
+[0m20:54:03.963288 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: Close
+[0m20:54:03.963891 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1C313E90>]}
+[0m20:54:03.964224 [debug] [MainThread]: Using duckdb connection "master"
+[0m20:54:03.964416 [debug] [MainThread]: On master: BEGIN
+[0m20:54:03.964576 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m20:54:03.965026 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m20:54:03.965231 [debug] [MainThread]: On master: COMMIT
+[0m20:54:03.965399 [debug] [MainThread]: Using duckdb connection "master"
+[0m20:54:03.965543 [debug] [MainThread]: On master: COMMIT
+[0m20:54:03.965826 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m20:54:03.966004 [debug] [MainThread]: On master: Close
+[0m20:54:03.985112 [debug] [Thread-1 (]: Began running node model.aidoc_analytics.stg_clinical_scans
+[0m20:54:03.985563 [info ] [Thread-1 (]: 1 of 1 START sql view model main_stg_clinical.stg_clinical_scans ............... [RUN]
+[0m20:54:03.986042 [debug] [Thread-1 (]: Acquiring new duckdb connection 'model.aidoc_analytics.stg_clinical_scans'
+[0m20:54:03.986327 [debug] [Thread-1 (]: Began compiling node model.aidoc_analytics.stg_clinical_scans
+[0m20:54:03.990495 [debug] [Thread-1 (]: Writing injected SQL for node "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:03.992736 [debug] [Thread-1 (]: Began executing node model.aidoc_analytics.stg_clinical_scans
+[0m20:54:03.993561 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:03.993817 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+select database_name, type from duckdb_databases()
+[0m20:54:03.994077 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m20:54:03.995100 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m20:54:03.996066 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:03.996314 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_stg_clinical')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m20:54:03.997988 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m20:54:04.019477 [debug] [Thread-1 (]: Writing runtime sql for node "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:04.022192 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:04.022516 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: BEGIN
+[0m20:54:04.023025 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m20:54:04.023263 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:04.023493 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+
+  
+  create view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_tmp" as (
+    WITH raw_scans AS (
+    SELECT * FROM "clinical_warehouse"."raw_staging"."raw_ai_scans"
+)
+
+SELECT
+    event_id,
+    accession_number,
+    patient_id,
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    
+    -- Timestamp conversions
+    TRY_CAST(scan_timestamp AS TIMESTAMP) AS scan_at,
+    TRY_CAST(ai_processed_timestamp AS TIMESTAMP) AS ai_processed_at,
+    TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP) AS clinician_reviewed_at,
+    
+    -- Boolean flags
+    ai_flagged,
+    clinician_confirmed,
+    
+    -- Extract values from JSON payload
+    json_extract_string(raw_json_payload, '$.scanner_vendor') AS scanner_vendor,
+    CAST(json_extract_string(raw_json_payload, '$.ai_confidence_score') AS DOUBLE) AS ai_confidence_score,
+
+    -- Calculate core intervals in minutes
+    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(ai_processed_timestamp AS TIMESTAMP)) AS scan_to_ai_minutes,
+    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP)) AS total_turnaround_minutes
+
+FROM raw_scans
+  );
+
+[0m20:54:04.026470 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m20:54:04.030957 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:04.031246 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+alter view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_tmp" rename to "stg_clinical_scans"
+[0m20:54:04.032678 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m20:54:04.040603 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: COMMIT
+[0m20:54:04.040931 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:04.041151 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: COMMIT
+[0m20:54:04.043764 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m20:54:04.047389 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m20:54:04.047692 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+
+      drop view if exists "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_backup" cascade
+    
+[0m20:54:04.048327 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m20:54:04.049989 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: Close
+[0m20:54:04.052044 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '0f5de5d2-d5f5-4361-a70c-e3fd62bb90ed', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1C392620>]}
+[0m20:54:04.052523 [info ] [Thread-1 (]: 1 of 1 OK created sql view model main_stg_clinical.stg_clinical_scans .......... [[32mOK[0m in 0.06s]
+[0m20:54:04.053166 [debug] [Thread-1 (]: Finished running node model.aidoc_analytics.stg_clinical_scans
+[0m20:54:04.054761 [debug] [MainThread]: Using duckdb connection "master"
+[0m20:54:04.055041 [debug] [MainThread]: On master: BEGIN
+[0m20:54:04.055223 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m20:54:04.055847 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m20:54:04.056080 [debug] [MainThread]: On master: COMMIT
+[0m20:54:04.056255 [debug] [MainThread]: Using duckdb connection "master"
+[0m20:54:04.056424 [debug] [MainThread]: On master: COMMIT
+[0m20:54:04.056880 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m20:54:04.057112 [debug] [MainThread]: On master: Close
+[0m20:54:04.057402 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m20:54:04.057631 [debug] [MainThread]: Connection 'create_clinical_warehouse_main_stg_clinical' was properly closed.
+[0m20:54:04.057791 [debug] [MainThread]: Connection 'list_clinical_warehouse_main_stg_clinical' was properly closed.
+[0m20:54:04.057930 [debug] [MainThread]: Connection 'model.aidoc_analytics.stg_clinical_scans' was properly closed.
+[0m20:54:04.058112 [info ] [MainThread]: 
+[0m20:54:04.058360 [info ] [MainThread]: Finished running 1 view model in 0 hours 0 minutes and 4.73 seconds (4.73s).
+[0m20:54:04.058833 [debug] [MainThread]: Command end result
+[0m20:54:04.079617 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m20:54:04.081475 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m20:54:04.083291 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m20:54:04.089558 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m20:54:04.089924 [info ] [MainThread]: 
+[0m20:54:04.091078 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m20:54:04.091485 [info ] [MainThread]: 
+[0m20:54:04.091822 [info ] [MainThread]: Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=1
+[0m20:54:04.092590 [debug] [MainThread]: Command `dbt run` succeeded at 20:54:04.092500 after 8.94 seconds
+[0m20:54:04.092842 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1C6BCC30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1C65D5B0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000016C1C3C2ED0>]}
+[0m20:54:04.093079 [debug] [MainThread]: Flushing usage events
+[0m20:54:05.224215 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m21:09:29.364886 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26C8AE270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26EF43ED0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26EF43B10>]}
+
+
+============================== 21:09:29.369565 | 1b31259c-7c3f-4596-89a3-244f1107bcb4 ==============================
+[0m21:09:29.369565 [info ] [MainThread]: Running with dbt=1.12.6
+[0m21:09:29.370146 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'version_check': 'True', 'target_path': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'False', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'use_colors': 'True', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'invocation_command': 'dbt run --project-dir . --profiles-dir .', 'log_path': 'logs'}
+[0m21:09:29.618263 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26CE02190>]}
+[0m21:09:29.663587 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26EF19370>]}
+[0m21:09:29.666357 [info ] [MainThread]: Registered adapter: duckdb=1.11.1
+[0m21:09:29.817600 [debug] [MainThread]: checksum: 785db5c24db5231b087101f2ff00a2a338bffa2a095b092b072185745ada8492, vars: {}, profile: aidoc_duckdb, target: dev, version: 1.12.6
+[0m21:09:29.919733 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 2 files added, 0 files changed.
+[0m21:09:29.920107 [debug] [MainThread]: Partial parsing: added file: aidoc_analytics://dbt_project/models\marts\fct_clinical_impact.sql
+[0m21:09:29.920329 [debug] [MainThread]: Partial parsing: added file: aidoc_analytics://dbt_project/models\intermediate\int_clinical_turnaround.sql
+[0m21:09:30.133128 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26F808850>]}
+[0m21:09:30.195039 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m21:09:30.197041 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m21:09:30.229996 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m21:09:30.242325 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26F687020>]}
+[0m21:09:30.242716 [info ] [MainThread]: Found 3 models, 1 source, 511 macros
+[0m21:09:30.243029 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26F96B310>]}
+[0m21:09:30.244403 [info ] [MainThread]: 
+[0m21:09:30.244732 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m21:09:30.244960 [info ] [MainThread]: 
+[0m21:09:30.245388 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m21:09:30.248878 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse'
+[0m21:09:30.299488 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m21:09:30.299809 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m21:09:30.300022 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m21:09:30.345388 [debug] [ThreadPool]: SQL status: OK in 0.045 seconds
+[0m21:09:30.346400 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m21:09:30.347539 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m21:09:30.347769 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m21:09:30.348006 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.349064 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:09:30.349843 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m21:09:30.350910 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m21:09:30.351128 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m21:09:30.351300 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.352446 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:09:30.353240 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m21:09:30.353767 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse, now create_clinical_warehouse_main_int_clinical)
+[0m21:09:30.354091 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_int_clinical"
+"
+[0m21:09:30.358809 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m21:09:30.359064 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_int_clinical"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m21:09:30.359241 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.360352 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:09:30.361190 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m21:09:30.361385 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: BEGIN
+[0m21:09:30.361775 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.361961 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m21:09:30.362120 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_int_clinical"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_int_clinical"
+    
+[0m21:09:30.362572 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.363141 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: COMMIT
+[0m21:09:30.363329 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m21:09:30.363508 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: COMMIT
+[0m21:09:30.366011 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m21:09:30.366293 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: Close
+[0m21:09:30.366868 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly create_clinical_warehouse_main_int_clinical, now create_clinical_warehouse_main_stg_clinical)
+[0m21:09:30.367238 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_stg_clinical"
+"
+[0m21:09:30.368093 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m21:09:30.368345 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_stg_clinical"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m21:09:30.368529 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.369590 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:09:30.370446 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m21:09:30.370643 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: BEGIN
+[0m21:09:30.371001 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.371185 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m21:09:30.371340 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_stg_clinical"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_stg_clinical"
+    
+[0m21:09:30.371761 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.372332 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: COMMIT
+[0m21:09:30.372520 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m21:09:30.372675 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: COMMIT
+[0m21:09:30.373004 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.373195 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: Close
+[0m21:09:30.373583 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly create_clinical_warehouse_main_stg_clinical, now create_clinical_warehouse_main_marts)
+[0m21:09:30.373905 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_marts"
+"
+[0m21:09:30.375331 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m21:09:30.375561 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_marts"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m21:09:30.375760 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.376791 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:09:30.377609 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m21:09:30.377808 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: BEGIN
+[0m21:09:30.378159 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.378359 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m21:09:30.378519 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_marts"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_marts"
+    
+[0m21:09:30.378934 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.379486 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: COMMIT
+[0m21:09:30.379682 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m21:09:30.379840 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: COMMIT
+[0m21:09:30.381572 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m21:09:30.381802 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: Close
+[0m21:09:30.383084 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse_main_int_clinical'
+[0m21:09:30.387484 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m21:09:30.387941 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: BEGIN
+[0m21:09:30.388169 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m21:09:30.388721 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:09:30.388937 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m21:09:30.389125 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_int_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_int_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m21:09:30.403153 [debug] [ThreadPool]: SQL status: OK in 0.014 seconds
+[0m21:09:30.404150 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: ROLLBACK
+[0m21:09:30.404753 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: Close
+[0m21:09:30.405189 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_int_clinical, now list_clinical_warehouse_main_stg_clinical)
+[0m21:09:30.406040 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m21:09:30.406246 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: BEGIN
+[0m21:09:30.406431 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.406872 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.407053 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m21:09:30.407217 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_stg_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_stg_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m21:09:30.411204 [debug] [ThreadPool]: SQL status: OK in 0.004 seconds
+[0m21:09:30.412150 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: ROLLBACK
+[0m21:09:30.412519 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: Close
+[0m21:09:30.412919 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_stg_clinical, now list_clinical_warehouse_main_marts)
+[0m21:09:30.413675 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m21:09:30.413864 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: BEGIN
+[0m21:09:30.414274 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:09:30.414660 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:09:30.414845 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m21:09:30.415010 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_marts"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_marts'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m21:09:30.416870 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m21:09:30.417597 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: ROLLBACK
+[0m21:09:30.417941 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: Close
+[0m21:09:30.418609 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26FB8BAD0>]}
+[0m21:09:30.418953 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:09:30.419171 [debug] [MainThread]: On master: BEGIN
+[0m21:09:30.419332 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m21:09:30.419768 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m21:09:30.420009 [debug] [MainThread]: On master: COMMIT
+[0m21:09:30.420234 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:09:30.420392 [debug] [MainThread]: On master: COMMIT
+[0m21:09:30.420712 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m21:09:30.420891 [debug] [MainThread]: On master: Close
+[0m21:09:30.424374 [debug] [Thread-1 (]: Began running node model.aidoc_analytics.stg_clinical_scans
+[0m21:09:30.424781 [info ] [Thread-1 (]: 1 of 3 START sql view model main_stg_clinical.stg_clinical_scans ............... [RUN]
+[0m21:09:30.425487 [debug] [Thread-1 (]: Acquiring new duckdb connection 'model.aidoc_analytics.stg_clinical_scans'
+[0m21:09:30.425735 [debug] [Thread-1 (]: Began compiling node model.aidoc_analytics.stg_clinical_scans
+[0m21:09:30.429819 [debug] [Thread-1 (]: Writing injected SQL for node "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.430694 [debug] [Thread-1 (]: Began executing node model.aidoc_analytics.stg_clinical_scans
+[0m21:09:30.431591 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.431911 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+select database_name, type from duckdb_databases()
+[0m21:09:30.432151 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m21:09:30.433309 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:09:30.434360 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.434670 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_stg_clinical')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m21:09:30.436408 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:09:30.457906 [debug] [Thread-1 (]: Writing runtime sql for node "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.459046 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.459414 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: BEGIN
+[0m21:09:30.460040 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.460315 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.460551 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+
+  
+  create view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_tmp" as (
+    WITH raw_scans AS (
+    SELECT * FROM "clinical_warehouse"."raw_staging"."raw_ai_scans"
+)
+
+SELECT
+    event_id,
+    accession_number,
+    patient_id,
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    
+    -- Timestamp conversions
+    TRY_CAST(scan_timestamp AS TIMESTAMP) AS scan_at,
+    TRY_CAST(ai_processed_timestamp AS TIMESTAMP) AS ai_processed_at,
+    TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP) AS clinician_reviewed_at,
+    
+    -- Boolean flags
+    ai_flagged,
+    clinician_confirmed,
+    
+    -- Extract values from JSON payload
+    json_extract_string(raw_json_payload, '$.scanner_vendor') AS scanner_vendor,
+    CAST(json_extract_string(raw_json_payload, '$.ai_confidence_score') AS DOUBLE) AS ai_confidence_score,
+
+    -- Calculate core intervals in minutes
+    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(ai_processed_timestamp AS TIMESTAMP)) AS scan_to_ai_minutes,
+    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP)) AS total_turnaround_minutes
+
+FROM raw_scans
+  );
+
+[0m21:09:30.463715 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m21:09:30.468275 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.468582 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+alter view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans" rename to "stg_clinical_scans__dbt_backup"
+[0m21:09:30.469269 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.470684 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.470937 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+alter view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_tmp" rename to "stg_clinical_scans"
+[0m21:09:30.471485 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.480692 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: COMMIT
+[0m21:09:30.481058 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.481269 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: COMMIT
+[0m21:09:30.484352 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m21:09:30.487930 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.stg_clinical_scans"
+[0m21:09:30.488251 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.stg_clinical_scans"} */
+
+      drop view if exists "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_backup" cascade
+    
+[0m21:09:30.489850 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:09:30.491635 [debug] [Thread-1 (]: On model.aidoc_analytics.stg_clinical_scans: Close
+[0m21:09:30.493961 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26F9A5FD0>]}
+[0m21:09:30.494484 [info ] [Thread-1 (]: 1 of 3 OK created sql view model main_stg_clinical.stg_clinical_scans .......... [[32mOK[0m in 0.07s]
+[0m21:09:30.495610 [debug] [Thread-1 (]: Finished running node model.aidoc_analytics.stg_clinical_scans
+[0m21:09:30.496224 [debug] [Thread-1 (]: Began running node model.aidoc_analytics.int_clinical_turnaround
+[0m21:09:30.496612 [info ] [Thread-1 (]: 2 of 3 START sql view model main_int_clinical.int_clinical_turnaround .......... [RUN]
+[0m21:09:30.497237 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.aidoc_analytics.stg_clinical_scans, now model.aidoc_analytics.int_clinical_turnaround)
+[0m21:09:30.497594 [debug] [Thread-1 (]: Began compiling node model.aidoc_analytics.int_clinical_turnaround
+[0m21:09:30.499080 [debug] [Thread-1 (]: Writing injected SQL for node "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.500150 [debug] [Thread-1 (]: Began executing node model.aidoc_analytics.int_clinical_turnaround
+[0m21:09:30.500972 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.501338 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.int_clinical_turnaround"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_int_clinical')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m21:09:30.502042 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:09:30.503885 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m21:09:30.507003 [debug] [Thread-1 (]: Writing runtime sql for node "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.508544 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.508890 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: BEGIN
+[0m21:09:30.509560 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.509952 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.510304 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.int_clinical_turnaround"} */
+
+  
+  create view "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround__dbt_tmp" as (
+    WITH stg_scans AS (
+    SELECT * FROM "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+)
+
+SELECT
+    event_id,
+    accession_number,
+    patient_id,
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    scan_at,
+    ai_processed_at,
+    clinician_reviewed_at,
+    ai_flagged,
+    clinician_confirmed,
+    scanner_vendor,
+    ai_confidence_score,
+    scan_to_ai_minutes,
+    total_turnaround_minutes,
+
+    -- Classify detection accuracy
+    CASE
+        WHEN ai_flagged AND clinician_confirmed THEN 'TRUE_POSITIVE'
+        WHEN ai_flagged AND NOT clinician_confirmed THEN 'FALSE_POSITIVE'
+        WHEN NOT ai_flagged AND clinician_confirmed THEN 'FALSE_NEGATIVE'
+        ELSE 'TRUE_NEGATIVE'
+    END AS ai_detection_classification,
+
+    -- Categorize SLA / Turnaround Performance
+    CASE
+        WHEN total_turnaround_minutes IS NULL THEN 'PENDING_REVIEW'
+        WHEN total_turnaround_minutes <= 30 THEN 'WITHIN_TARGET'
+        WHEN total_turnaround_minutes <= 60 THEN 'MODERATE_DELAY'
+        ELSE 'SEVERE_DELAY'
+    END AS turnaround_performance_category
+
+FROM stg_scans
+  );
+
+[0m21:09:30.514228 [debug] [Thread-1 (]: SQL status: OK in 0.004 seconds
+[0m21:09:30.515988 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.516242 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.int_clinical_turnaround"} */
+alter view "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround__dbt_tmp" rename to "int_clinical_turnaround"
+[0m21:09:30.516868 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.517864 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: COMMIT
+[0m21:09:30.518128 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.518342 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: COMMIT
+[0m21:09:30.521489 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m21:09:30.523041 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.int_clinical_turnaround"
+[0m21:09:30.523340 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.int_clinical_turnaround"} */
+
+      drop view if exists "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround__dbt_backup" cascade
+    
+[0m21:09:30.524123 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.525327 [debug] [Thread-1 (]: On model.aidoc_analytics.int_clinical_turnaround: Close
+[0m21:09:30.525846 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26FC94470>]}
+[0m21:09:30.526331 [info ] [Thread-1 (]: 2 of 3 OK created sql view model main_int_clinical.int_clinical_turnaround ..... [[32mOK[0m in 0.03s]
+[0m21:09:30.527063 [debug] [Thread-1 (]: Finished running node model.aidoc_analytics.int_clinical_turnaround
+[0m21:09:30.527613 [debug] [Thread-1 (]: Began running node model.aidoc_analytics.fct_clinical_impact
+[0m21:09:30.528047 [info ] [Thread-1 (]: 3 of 3 START sql table model main_marts.fct_clinical_impact .................... [RUN]
+[0m21:09:30.528605 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.aidoc_analytics.int_clinical_turnaround, now model.aidoc_analytics.fct_clinical_impact)
+[0m21:09:30.528916 [debug] [Thread-1 (]: Began compiling node model.aidoc_analytics.fct_clinical_impact
+[0m21:09:30.530428 [debug] [Thread-1 (]: Writing injected SQL for node "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.531783 [debug] [Thread-1 (]: Began executing node model.aidoc_analytics.fct_clinical_impact
+[0m21:09:30.532679 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.532948 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.fct_clinical_impact"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_marts')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m21:09:30.533191 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:09:30.534499 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:09:30.565436 [debug] [Thread-1 (]: Writing runtime sql for node "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.566577 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.566872 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: BEGIN
+[0m21:09:30.567438 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.567695 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.567950 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.fct_clinical_impact"} */
+
+    
+
+    create  table
+      "clinical_warehouse"."main_marts"."fct_clinical_impact__dbt_tmp"
+  
+    
+    as (
+      WITH int_scans AS (
+    SELECT * FROM "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+)
+
+SELECT
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    COUNT(event_id) AS total_scans,
+    COUNT(CASE WHEN ai_flagged THEN 1 END) AS total_ai_alerts,
+    COUNT(CASE WHEN ai_detection_classification = 'TRUE_POSITIVE' THEN 1 END) AS true_positives,
+    COUNT(CASE WHEN ai_detection_classification = 'FALSE_POSITIVE' THEN 1 END) AS false_positives,
+    
+    -- Calculated Metrics
+    ROUND(
+        CAST(COUNT(CASE WHEN ai_detection_classification = 'TRUE_POSITIVE' THEN 1 END) AS DOUBLE) /
+        NULLIF(COUNT(CASE WHEN ai_flagged THEN 1 END), 0) * 100, 2
+    ) AS ai_precision_percentage,
+
+    ROUND(AVG(scan_to_ai_minutes), 2) AS avg_ai_processing_minutes,
+    ROUND(AVG(total_turnaround_minutes), 2) AS avg_turnaround_minutes,
+    
+    MEDIAN(total_turnaround_minutes) AS median_turnaround_minutes
+
+FROM int_scans
+GROUP BY
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority
+    );
+    
+  
+[0m21:09:30.597536 [debug] [Thread-1 (]: SQL status: OK in 0.029 seconds
+[0m21:09:30.599323 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.599583 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.fct_clinical_impact"} */
+alter table "clinical_warehouse"."main_marts"."fct_clinical_impact__dbt_tmp" rename to "fct_clinical_impact"
+[0m21:09:30.600479 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:09:30.605303 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: COMMIT
+[0m21:09:30.605627 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.605849 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: COMMIT
+[0m21:09:30.607547 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:09:30.608687 [debug] [Thread-1 (]: Using duckdb connection "model.aidoc_analytics.fct_clinical_impact"
+[0m21:09:30.608915 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "model.aidoc_analytics.fct_clinical_impact"} */
+
+      drop table if exists "clinical_warehouse"."main_marts"."fct_clinical_impact__dbt_backup" cascade
+    
+[0m21:09:30.609533 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:09:30.610482 [debug] [Thread-1 (]: On model.aidoc_analytics.fct_clinical_impact: Close
+[0m21:09:30.610883 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '1b31259c-7c3f-4596-89a3-244f1107bcb4', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26FD49810>]}
+[0m21:09:30.611320 [info ] [Thread-1 (]: 3 of 3 OK created sql table model main_marts.fct_clinical_impact ............... [[32mOK[0m in 0.08s]
+[0m21:09:30.611829 [debug] [Thread-1 (]: Finished running node model.aidoc_analytics.fct_clinical_impact
+[0m21:09:30.612820 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:09:30.613050 [debug] [MainThread]: On master: BEGIN
+[0m21:09:30.613230 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m21:09:30.613790 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m21:09:30.614092 [debug] [MainThread]: On master: COMMIT
+[0m21:09:30.614375 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:09:30.614538 [debug] [MainThread]: On master: COMMIT
+[0m21:09:30.614865 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m21:09:30.615056 [debug] [MainThread]: On master: Close
+[0m21:09:30.615312 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m21:09:30.615482 [debug] [MainThread]: Connection 'create_clinical_warehouse_main_marts' was properly closed.
+[0m21:09:30.615624 [debug] [MainThread]: Connection 'list_clinical_warehouse_main_marts' was properly closed.
+[0m21:09:30.615754 [debug] [MainThread]: Connection 'model.aidoc_analytics.fct_clinical_impact' was properly closed.
+[0m21:09:30.615961 [info ] [MainThread]: 
+[0m21:09:30.616222 [info ] [MainThread]: Finished running 1 table model, 2 view models in 0 hours 0 minutes and 0.37 seconds (0.37s).
+[0m21:09:30.616828 [debug] [MainThread]: Command end result
+[0m21:09:30.636606 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m21:09:30.638957 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m21:09:30.640800 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m21:09:30.645951 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m21:09:30.646263 [info ] [MainThread]: 
+[0m21:09:30.646679 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m21:09:30.647061 [info ] [MainThread]: 
+[0m21:09:30.647339 [info ] [MainThread]: Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=3
+[0m21:09:30.647981 [debug] [MainThread]: Command `dbt run` succeeded at 21:09:30.647899 after 1.55 seconds
+[0m21:09:30.648220 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26F97F3D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26F3F36D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F26EF77A10>]}
+[0m21:09:30.648467 [debug] [MainThread]: Flushing usage events
+[0m21:09:31.853430 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m21:28:45.642136 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E294E270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E4FB7ED0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E4FB7B10>]}
+
+
+============================== 21:28:45.647603 | d0d8a3e6-40be-40f6-b6f8-1ae23f677323 ==============================
+[0m21:28:45.647603 [info ] [MainThread]: Running with dbt=1.12.6
+[0m21:28:45.648184 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'target_path': 'None', 'maximum_seed_size_mib': '1', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'indirect_selection': 'eager', 'hints_enabled': 'True', 'invocation_command': 'dbt test --project-dir . --profiles-dir .', 'use_experimental_parser': 'False', 'use_colors': 'True', 'log_path': 'logs'}
+[0m21:28:45.897464 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E2E86190>]}
+[0m21:28:45.944189 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E4F89370>]}
+[0m21:28:45.946858 [info ] [MainThread]: Registered adapter: duckdb=1.11.1
+[0m21:28:46.094418 [debug] [MainThread]: checksum: 785db5c24db5231b087101f2ff00a2a338bffa2a095b092b072185745ada8492, vars: {}, profile: aidoc_duckdb, target: dev, version: 1.12.6
+[0m21:28:46.187814 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 1 files changed.
+[0m21:28:46.188285 [debug] [MainThread]: Partial parsing: updated file: aidoc_analytics://dbt_project/models\staging\schema.yml
+[0m21:28:46.416420 [warn ] [MainThread]: [[33mWARNING[0m][MissingArgumentsPropertyInGenericTestDeprecation]: Deprecated
+functionality
+Found top-level arguments to test `accepted_values` defined on
+'int_clinical_turnaround' in package 'aidoc_analytics'
+(dbt_project/models\staging\schema.yml). Arguments to generic tests should be
+nested under the `arguments` property.
+[0m21:28:46.416895 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'deprecation', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'property_': 'warn', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E52AF950>]}
+[0m21:28:46.496153 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5333E30>]}
+[0m21:28:46.570446 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m21:28:46.572335 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m21:28:46.600544 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m21:28:46.622809 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5CE4210>]}
+[0m21:28:46.623195 [info ] [MainThread]: Found 3 models, 7 data tests, 1 source, 511 macros
+[0m21:28:46.623594 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5CA57E0>]}
+[0m21:28:46.625160 [info ] [MainThread]: 
+[0m21:28:46.625543 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m21:28:46.625843 [info ] [MainThread]: 
+[0m21:28:46.626233 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m21:28:46.627162 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse_main_marts'
+[0m21:28:46.665024 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m21:28:46.665315 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: BEGIN
+[0m21:28:46.665495 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m21:28:46.702687 [debug] [ThreadPool]: SQL status: OK in 0.037 seconds
+[0m21:28:46.703020 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m21:28:46.703223 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_marts"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_marts'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m21:28:46.716160 [debug] [ThreadPool]: SQL status: OK in 0.013 seconds
+[0m21:28:46.717420 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: ROLLBACK
+[0m21:28:46.717920 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: Close
+[0m21:28:46.718375 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_marts, now list_clinical_warehouse_main_int_clinical)
+[0m21:28:46.719209 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m21:28:46.719411 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: BEGIN
+[0m21:28:46.719595 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:28:46.720159 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m21:28:46.720375 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m21:28:46.720549 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_int_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_int_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m21:28:46.722720 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m21:28:46.723687 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: ROLLBACK
+[0m21:28:46.724089 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: Close
+[0m21:28:46.724521 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_int_clinical, now list_clinical_warehouse_main_stg_clinical)
+[0m21:28:46.725580 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m21:28:46.725808 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: BEGIN
+[0m21:28:46.725970 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m21:28:46.726340 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m21:28:46.726532 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m21:28:46.726719 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_stg_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_stg_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m21:28:46.728601 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m21:28:46.729523 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: ROLLBACK
+[0m21:28:46.729893 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: Close
+[0m21:28:46.731022 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'd0d8a3e6-40be-40f6-b6f8-1ae23f677323', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5BE4F50>]}
+[0m21:28:46.731325 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:28:46.731496 [debug] [MainThread]: On master: BEGIN
+[0m21:28:46.731645 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m21:28:46.732000 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m21:28:46.732198 [debug] [MainThread]: On master: COMMIT
+[0m21:28:46.732364 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:28:46.732505 [debug] [MainThread]: On master: COMMIT
+[0m21:28:46.732796 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m21:28:46.732981 [debug] [MainThread]: On master: Close
+[0m21:28:46.736600 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m21:28:46.736919 [info ] [Thread-1 (]: 1 of 7 START test accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE  [RUN]
+[0m21:28:46.737403 [debug] [Thread-1 (]: Acquiring new duckdb connection 'test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0'
+[0m21:28:46.737736 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m21:28:46.745188 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m21:28:46.746207 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m21:28:46.747093 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m21:28:46.747425 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"} */
+select database_name, type from duckdb_databases()
+[0m21:28:46.747700 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m21:28:46.748785 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.749674 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m21:28:46.749936 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_dbt_test__audit')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m21:28:46.751096 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.765067 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m21:28:46.766334 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m21:28:46.766713 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: BEGIN
+[0m21:28:46.767247 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m21:28:46.767487 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m21:28:46.767716 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+with all_values as (
+
+    select
+        ai_detection_classification as value_field,
+        count(*) as n_records
+
+    from "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+    group by ai_detection_classification
+
+)
+
+select *
+from all_values
+where value_field not in (
+    'TRUE_POSITIVE','FALSE_POSITIVE','FALSE_NEGATIVE','TRUE_NEGATIVE'
+)
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.773584 [debug] [Thread-1 (]: SQL status: OK in 0.005 seconds
+[0m21:28:46.776810 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: ROLLBACK
+[0m21:28:46.777386 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: Close
+[0m21:28:46.777852 [info ] [Thread-1 (]: 1 of 7 PASS accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE  [[32mPASS[0m in 0.04s]
+[0m21:28:46.778555 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m21:28:46.778864 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m21:28:46.779129 [info ] [Thread-1 (]: 2 of 7 START test accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE  [RUN]
+[0m21:28:46.779718 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.aidoc_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0, now test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683)
+[0m21:28:46.779975 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m21:28:46.784178 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m21:28:46.785328 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m21:28:46.786740 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m21:28:46.787802 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m21:28:46.788367 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: BEGIN
+[0m21:28:46.788731 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:28:46.789399 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.789644 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m21:28:46.789867 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+with all_values as (
+
+    select
+        clinical_priority as value_field,
+        count(*) as n_records
+
+    from "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+    group by clinical_priority
+
+)
+
+select *
+from all_values
+where value_field not in (
+    'EMERGENCY','URGENT','ROUTINE'
+)
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.794502 [debug] [Thread-1 (]: SQL status: OK in 0.004 seconds
+[0m21:28:46.795653 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: ROLLBACK
+[0m21:28:46.796133 [debug] [Thread-1 (]: On test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: Close
+[0m21:28:46.796594 [info ] [Thread-1 (]: 2 of 7 PASS accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE  [[32mPASS[0m in 0.02s]
+[0m21:28:46.797140 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m21:28:46.797413 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m21:28:46.797699 [info ] [Thread-1 (]: 3 of 7 START test not_null_fct_clinical_impact_total_scans ..................... [RUN]
+[0m21:28:46.798321 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.aidoc_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683, now test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc)
+[0m21:28:46.798816 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m21:28:46.805982 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m21:28:46.807468 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m21:28:46.808797 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m21:28:46.810420 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m21:28:46.810697 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: BEGIN
+[0m21:28:46.810907 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:28:46.811459 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.811689 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m21:28:46.811900 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select total_scans
+from "clinical_warehouse"."main_marts"."fct_clinical_impact"
+where total_scans is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.813075 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.814141 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: ROLLBACK
+[0m21:28:46.814600 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: Close
+[0m21:28:46.815074 [info ] [Thread-1 (]: 3 of 7 PASS not_null_fct_clinical_impact_total_scans ........................... [[32mPASS[0m in 0.02s]
+[0m21:28:46.815629 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m21:28:46.815884 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m21:28:46.816237 [info ] [Thread-1 (]: 4 of 7 START test not_null_int_clinical_turnaround_event_id .................... [RUN]
+[0m21:28:46.816752 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.aidoc_analytics.not_null_fct_clinical_impact_total_scans.86537486bc, now test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a)
+[0m21:28:46.817033 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m21:28:46.820989 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m21:28:46.822231 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m21:28:46.823827 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m21:28:46.824676 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m21:28:46.824943 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: BEGIN
+[0m21:28:46.825169 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:28:46.825771 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.826029 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m21:28:46.826237 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select event_id
+from "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+where event_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.828584 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m21:28:46.829659 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: ROLLBACK
+[0m21:28:46.830084 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: Close
+[0m21:28:46.830527 [info ] [Thread-1 (]: 4 of 7 PASS not_null_int_clinical_turnaround_event_id .......................... [[32mPASS[0m in 0.01s]
+[0m21:28:46.831102 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m21:28:46.831356 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m21:28:46.831800 [info ] [Thread-1 (]: 5 of 7 START test not_null_stg_clinical_scans_event_id ......................... [RUN]
+[0m21:28:46.832387 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.aidoc_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a, now test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398)
+[0m21:28:46.832692 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m21:28:46.837105 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m21:28:46.838165 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m21:28:46.839831 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m21:28:46.841032 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m21:28:46.841340 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398: BEGIN
+[0m21:28:46.841572 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:28:46.842117 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.842394 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m21:28:46.842613 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select event_id
+from "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+where event_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.844374 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.845502 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398: ROLLBACK
+[0m21:28:46.846046 [debug] [Thread-1 (]: On test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398: Close
+[0m21:28:46.846497 [info ] [Thread-1 (]: 5 of 7 PASS not_null_stg_clinical_scans_event_id ............................... [[32mPASS[0m in 0.01s]
+[0m21:28:46.846988 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m21:28:46.847230 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m21:28:46.847449 [info ] [Thread-1 (]: 6 of 7 START test unique_int_clinical_turnaround_event_id ...................... [RUN]
+[0m21:28:46.847880 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.aidoc_analytics.not_null_stg_clinical_scans_event_id.6cba202398, now test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f)
+[0m21:28:46.848113 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m21:28:46.853742 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m21:28:46.854709 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m21:28:46.856779 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m21:28:46.858191 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m21:28:46.858757 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: BEGIN
+[0m21:28:46.858998 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:28:46.859578 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.859792 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m21:28:46.859987 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    event_id as unique_field,
+    count(*) as n_records
+
+from "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+where event_id is not null
+group by event_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.863567 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m21:28:46.864950 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: ROLLBACK
+[0m21:28:46.865452 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: Close
+[0m21:28:46.865968 [info ] [Thread-1 (]: 6 of 7 PASS unique_int_clinical_turnaround_event_id ............................ [[32mPASS[0m in 0.02s]
+[0m21:28:46.866477 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m21:28:46.866731 [debug] [Thread-1 (]: Began running node test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m21:28:46.866966 [info ] [Thread-1 (]: 7 of 7 START test unique_stg_clinical_scans_event_id ........................... [RUN]
+[0m21:28:46.867314 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.aidoc_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f, now test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1)
+[0m21:28:46.867515 [debug] [Thread-1 (]: Began compiling node test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m21:28:46.875422 [debug] [Thread-1 (]: Writing injected SQL for node "test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m21:28:46.876504 [debug] [Thread-1 (]: Began executing node test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m21:28:46.877788 [debug] [Thread-1 (]: Writing runtime sql for node "test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m21:28:46.878786 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m21:28:46.879084 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: BEGIN
+[0m21:28:46.879305 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m21:28:46.879848 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m21:28:46.880076 [debug] [Thread-1 (]: Using duckdb connection "test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m21:28:46.880303 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "aidoc_duckdb", "target_name": "dev", "node_id": "test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    event_id as unique_field,
+    count(*) as n_records
+
+from "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+where event_id is not null
+group by event_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m21:28:46.883112 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m21:28:46.884251 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: ROLLBACK
+[0m21:28:46.884714 [debug] [Thread-1 (]: On test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: Close
+[0m21:28:46.885163 [info ] [Thread-1 (]: 7 of 7 PASS unique_stg_clinical_scans_event_id ................................. [[32mPASS[0m in 0.02s]
+[0m21:28:46.885662 [debug] [Thread-1 (]: Finished running node test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m21:28:46.886862 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:28:46.887245 [debug] [MainThread]: On master: BEGIN
+[0m21:28:46.887584 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m21:28:46.888356 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m21:28:46.888643 [debug] [MainThread]: On master: COMMIT
+[0m21:28:46.888878 [debug] [MainThread]: Using duckdb connection "master"
+[0m21:28:46.889093 [debug] [MainThread]: On master: COMMIT
+[0m21:28:46.889672 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m21:28:46.889943 [debug] [MainThread]: On master: Close
+[0m21:28:46.890265 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m21:28:46.890534 [debug] [MainThread]: Connection 'list_clinical_warehouse_main_stg_clinical' was properly closed.
+[0m21:28:46.890681 [debug] [MainThread]: Connection 'test.aidoc_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1' was properly closed.
+[0m21:28:46.890887 [info ] [MainThread]: 
+[0m21:28:46.891311 [info ] [MainThread]: Finished running 7 data tests in 0 hours 0 minutes and 0.26 seconds (0.26s).
+[0m21:28:46.892345 [debug] [MainThread]: Command end result
+[0m21:28:46.914067 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m21:28:46.916035 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m21:28:46.917845 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m21:28:46.923781 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m21:28:46.924066 [info ] [MainThread]: 
+[0m21:28:46.924517 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m21:28:46.925026 [info ] [MainThread]: 
+[0m21:28:46.925740 [info ] [MainThread]: Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=7
+[0m21:28:46.926423 [warn ] [MainThread]: [[33mWARNING[0m][DeprecationsSummary]: Deprecated functionality
+Summary of encountered deprecations:
+- MissingArgumentsPropertyInGenericTestDeprecation: 2 occurrences
+To see all deprecation instances instead of just the first occurrence of each,
+run command again with the `--show-all-deprecations` flag. You may also need to
+run with `--no-partial-parse` as some deprecations are only encountered during
+parsing.
+[0m21:28:46.928150 [debug] [MainThread]: Command `dbt test` succeeded at 21:28:46.927977 after 1.44 seconds
+[0m21:28:46.928533 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5C5E570>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5F53D90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001B3E5F53610>]}
+[0m21:28:46.928832 [debug] [MainThread]: Flushing usage events
+[0m21:28:48.066150 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m01:51:16.429381 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFA54E270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFCBC7ED0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFCBC7B10>]}
+
+
+============================== 01:51:16.433730 | a7833bc2-15f1-4286-a4b9-5d9fc66a8725 ==============================
+[0m01:51:16.433730 [info ] [MainThread]: Running with dbt=1.12.6
+[0m01:51:16.434548 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'maximum_seed_size_mib': '1', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'version_check': 'True', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'False', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': '.', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'invocation_command': 'dbt run --project-dir . --profiles-dir .', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'use_colors': 'True', 'log_path': 'logs'}
+[0m01:51:16.695525 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFAA86190>]}
+[0m01:51:16.741912 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFCB99370>]}
+[0m01:51:16.744668 [info ] [MainThread]: Registered adapter: duckdb=1.11.1
+[0m01:51:16.889134 [debug] [MainThread]: checksum: fc917a09330ecea6a48ad9073b34d48ab2eeb7b9fc8eb5e89ddac47361a1f20a, vars: {}, profile: clinical_duckdb, target: dev, version: 1.12.6
+[0m01:51:16.981043 [info ] [MainThread]: Unable to do partial parsing because config vars, config profile, or config target have changed
+[0m01:51:16.981873 [debug] [MainThread]: previous checksum: fc917a09330ecea6a48ad9073b34d48ab2eeb7b9fc8eb5e89ddac47361a1f20a, current checksum: 785db5c24db5231b087101f2ff00a2a338bffa2a095b092b072185745ada8492
+[0m01:51:16.982110 [info ] [MainThread]: Unable to do partial parsing because a project dependency has been added
+[0m01:51:16.982360 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFD4C1050>]}
+[0m01:51:18.015671 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFCF933E0>]}
+[0m01:51:18.083744 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m01:51:18.085750 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m01:51:18.113864 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m01:51:18.127261 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFD748750>]}
+[0m01:51:18.127667 [info ] [MainThread]: Found 3 models, 7 data tests, 1 source, 511 macros
+[0m01:51:18.128212 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFD3A36C0>]}
+[0m01:51:18.129718 [info ] [MainThread]: 
+[0m01:51:18.130125 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m01:51:18.130851 [info ] [MainThread]: 
+[0m01:51:18.131315 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m01:51:18.135045 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse'
+[0m01:51:18.181611 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m01:51:18.181909 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m01:51:18.182095 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m01:51:18.220665 [debug] [ThreadPool]: SQL status: OK in 0.038 seconds
+[0m01:51:18.221637 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m01:51:18.222715 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m01:51:18.222929 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m01:51:18.223263 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.224272 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:18.225018 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m01:51:18.225906 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse"
+[0m01:51:18.226112 [debug] [ThreadPool]: On list_clinical_warehouse: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where lower(catalog_name) = '"clinical_warehouse"'
+    
+  
+  
+[0m01:51:18.226338 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.227209 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:18.227901 [debug] [ThreadPool]: On list_clinical_warehouse: Close
+[0m01:51:18.228428 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse, now create_clinical_warehouse_main_int_clinical)
+[0m01:51:18.228756 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_int_clinical"
+"
+[0m01:51:18.233412 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m01:51:18.233680 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_int_clinical"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m01:51:18.233875 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.234902 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:18.235733 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m01:51:18.235927 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: BEGIN
+[0m01:51:18.236281 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.236488 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m01:51:18.236645 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_int_clinical"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_int_clinical"
+    
+[0m01:51:18.237065 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.237627 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: COMMIT
+[0m01:51:18.237834 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_int_clinical"
+[0m01:51:18.237992 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: COMMIT
+[0m01:51:18.238301 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.238494 [debug] [ThreadPool]: On create_clinical_warehouse_main_int_clinical: Close
+[0m01:51:18.238872 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly create_clinical_warehouse_main_int_clinical, now create_clinical_warehouse_main_marts)
+[0m01:51:18.239161 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_marts"
+"
+[0m01:51:18.239925 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m01:51:18.240116 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_marts"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m01:51:18.240294 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.241136 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:18.241867 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m01:51:18.242049 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: BEGIN
+[0m01:51:18.242356 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.242531 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m01:51:18.242679 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_marts"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_marts"
+    
+[0m01:51:18.243042 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.243550 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: COMMIT
+[0m01:51:18.243734 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_marts"
+[0m01:51:18.243886 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: COMMIT
+[0m01:51:18.244174 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.244365 [debug] [ThreadPool]: On create_clinical_warehouse_main_marts: Close
+[0m01:51:18.244745 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly create_clinical_warehouse_main_marts, now create_clinical_warehouse_main_stg_clinical)
+[0m01:51:18.245023 [debug] [ThreadPool]: Creating schema "database: "clinical_warehouse"
+schema: "main_stg_clinical"
+"
+[0m01:51:18.246229 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m01:51:18.246451 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_stg_clinical"} */
+
+    
+        select type from duckdb_databases()
+        where lower(database_name)='clinical_warehouse'
+        and type != 'duckdb'
+    
+  
+[0m01:51:18.246692 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.247791 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:18.248629 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m01:51:18.248825 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: BEGIN
+[0m01:51:18.249163 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.249340 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m01:51:18.249524 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "create_clinical_warehouse_main_stg_clinical"} */
+
+    
+    
+        create schema if not exists "clinical_warehouse"."main_stg_clinical"
+    
+[0m01:51:18.249913 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.250440 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: COMMIT
+[0m01:51:18.250631 [debug] [ThreadPool]: Using duckdb connection "create_clinical_warehouse_main_stg_clinical"
+[0m01:51:18.250785 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: COMMIT
+[0m01:51:18.251094 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.251333 [debug] [ThreadPool]: On create_clinical_warehouse_main_stg_clinical: Close
+[0m01:51:18.252682 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse_main_int_clinical'
+[0m01:51:18.255918 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m01:51:18.256135 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: BEGIN
+[0m01:51:18.256298 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m01:51:18.256684 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.256860 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m01:51:18.257015 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_int_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_int_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m01:51:18.270181 [debug] [ThreadPool]: SQL status: OK in 0.013 seconds
+[0m01:51:18.271314 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: ROLLBACK
+[0m01:51:18.271766 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: Close
+[0m01:51:18.272199 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_int_clinical, now list_clinical_warehouse_main_marts)
+[0m01:51:18.273310 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m01:51:18.273537 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: BEGIN
+[0m01:51:18.273693 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.274054 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.274248 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m01:51:18.274482 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_marts"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_marts'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m01:51:18.276263 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m01:51:18.277720 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: ROLLBACK
+[0m01:51:18.278121 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: Close
+[0m01:51:18.278505 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_marts, now list_clinical_warehouse_main_stg_clinical)
+[0m01:51:18.279280 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m01:51:18.279480 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: BEGIN
+[0m01:51:18.279650 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:18.280160 [debug] [ThreadPool]: SQL status: OK in 0.000 seconds
+[0m01:51:18.280353 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m01:51:18.280518 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_stg_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_stg_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m01:51:18.282924 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m01:51:18.283986 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: ROLLBACK
+[0m01:51:18.284451 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: Close
+[0m01:51:18.285321 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFD9C3E90>]}
+[0m01:51:18.285805 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:18.286052 [debug] [MainThread]: On master: BEGIN
+[0m01:51:18.286219 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m01:51:18.286643 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m01:51:18.286827 [debug] [MainThread]: On master: COMMIT
+[0m01:51:18.286986 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:18.287130 [debug] [MainThread]: On master: COMMIT
+[0m01:51:18.287494 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m01:51:18.287702 [debug] [MainThread]: On master: Close
+[0m01:51:18.292196 [debug] [Thread-1 (]: Began running node model.clinical_triage_analytics.stg_clinical_scans
+[0m01:51:18.292638 [info ] [Thread-1 (]: 1 of 3 START sql view model main_stg_clinical.stg_clinical_scans ............... [RUN]
+[0m01:51:18.293276 [debug] [Thread-1 (]: Acquiring new duckdb connection 'model.clinical_triage_analytics.stg_clinical_scans'
+[0m01:51:18.293527 [debug] [Thread-1 (]: Began compiling node model.clinical_triage_analytics.stg_clinical_scans
+[0m01:51:18.298046 [debug] [Thread-1 (]: Writing injected SQL for node "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.299939 [debug] [Thread-1 (]: Began executing node model.clinical_triage_analytics.stg_clinical_scans
+[0m01:51:18.300767 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.301022 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.stg_clinical_scans"} */
+select database_name, type from duckdb_databases()
+[0m01:51:18.301225 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m01:51:18.302259 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.303213 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.303470 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.stg_clinical_scans"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_stg_clinical')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m01:51:18.304592 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.323605 [debug] [Thread-1 (]: Writing runtime sql for node "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.325344 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.325658 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: BEGIN
+[0m01:51:18.326212 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.326469 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.326705 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.stg_clinical_scans"} */
+
+  
+  create view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_tmp" as (
+    WITH raw_scans AS (
+    SELECT * FROM "clinical_warehouse"."raw_staging"."raw_ai_scans"
+)
+
+SELECT
+    event_id,
+    accession_number,
+    patient_id,
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    
+    -- Timestamp conversions
+    TRY_CAST(scan_timestamp AS TIMESTAMP) AS scan_at,
+    TRY_CAST(ai_processed_timestamp AS TIMESTAMP) AS ai_processed_at,
+    TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP) AS clinician_reviewed_at,
+    
+    -- Boolean flags
+    ai_flagged,
+    clinician_confirmed,
+    
+    -- Extract values from JSON payload
+    json_extract_string(raw_json_payload, '$.scanner_vendor') AS scanner_vendor,
+    CAST(json_extract_string(raw_json_payload, '$.ai_confidence_score') AS DOUBLE) AS ai_confidence_score,
+
+    -- Calculate core intervals in minutes
+    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(ai_processed_timestamp AS TIMESTAMP)) AS scan_to_ai_minutes,
+    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP)) AS total_turnaround_minutes
+
+FROM raw_scans
+  );
+
+[0m01:51:18.328423 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.333279 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.333575 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.stg_clinical_scans"} */
+alter view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans" rename to "stg_clinical_scans__dbt_backup"
+[0m01:51:18.334278 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.335684 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.335933 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.stg_clinical_scans"} */
+alter view "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_tmp" rename to "stg_clinical_scans"
+[0m01:51:18.336452 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.345519 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: COMMIT
+[0m01:51:18.345822 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.346020 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: COMMIT
+[0m01:51:18.354533 [debug] [Thread-1 (]: SQL status: OK in 0.008 seconds
+[0m01:51:18.358665 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.stg_clinical_scans"
+[0m01:51:18.358957 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.stg_clinical_scans"} */
+
+      drop view if exists "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans__dbt_backup" cascade
+    
+[0m01:51:18.360225 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.361861 [debug] [Thread-1 (]: On model.clinical_triage_analytics.stg_clinical_scans: Close
+[0m01:51:18.363860 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFDCE81B0>]}
+[0m01:51:18.364373 [info ] [Thread-1 (]: 1 of 3 OK created sql view model main_stg_clinical.stg_clinical_scans .......... [[32mOK[0m in 0.07s]
+[0m01:51:18.364864 [debug] [Thread-1 (]: Finished running node model.clinical_triage_analytics.stg_clinical_scans
+[0m01:51:18.365407 [debug] [Thread-1 (]: Began running node model.clinical_triage_analytics.int_clinical_turnaround
+[0m01:51:18.365727 [info ] [Thread-1 (]: 2 of 3 START sql view model main_int_clinical.int_clinical_turnaround .......... [RUN]
+[0m01:51:18.366138 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.clinical_triage_analytics.stg_clinical_scans, now model.clinical_triage_analytics.int_clinical_turnaround)
+[0m01:51:18.366370 [debug] [Thread-1 (]: Began compiling node model.clinical_triage_analytics.int_clinical_turnaround
+[0m01:51:18.367827 [debug] [Thread-1 (]: Writing injected SQL for node "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.368743 [debug] [Thread-1 (]: Began executing node model.clinical_triage_analytics.int_clinical_turnaround
+[0m01:51:18.369506 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.369777 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.int_clinical_turnaround"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_int_clinical')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m01:51:18.370012 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:18.371419 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.373573 [debug] [Thread-1 (]: Writing runtime sql for node "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.374580 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.374843 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: BEGIN
+[0m01:51:18.375302 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.375540 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.375775 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.int_clinical_turnaround"} */
+
+  
+  create view "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround__dbt_tmp" as (
+    WITH stg_scans AS (
+    SELECT * FROM "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+)
+
+SELECT
+    event_id,
+    accession_number,
+    patient_id,
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    scan_at,
+    ai_processed_at,
+    clinician_reviewed_at,
+    ai_flagged,
+    clinician_confirmed,
+    scanner_vendor,
+    ai_confidence_score,
+    scan_to_ai_minutes,
+    total_turnaround_minutes,
+
+    -- Classify detection accuracy
+    CASE
+        WHEN ai_flagged AND clinician_confirmed THEN 'TRUE_POSITIVE'
+        WHEN ai_flagged AND NOT clinician_confirmed THEN 'FALSE_POSITIVE'
+        WHEN NOT ai_flagged AND clinician_confirmed THEN 'FALSE_NEGATIVE'
+        ELSE 'TRUE_NEGATIVE'
+    END AS ai_detection_classification,
+
+    -- Categorize SLA / Turnaround Performance
+    CASE
+        WHEN total_turnaround_minutes IS NULL THEN 'PENDING_REVIEW'
+        WHEN total_turnaround_minutes <= 30 THEN 'WITHIN_TARGET'
+        WHEN total_turnaround_minutes <= 60 THEN 'MODERATE_DELAY'
+        ELSE 'SEVERE_DELAY'
+    END AS turnaround_performance_category
+
+FROM stg_scans
+  );
+
+[0m01:51:18.377725 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:18.379888 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.380137 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.int_clinical_turnaround"} */
+alter view "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround" rename to "int_clinical_turnaround__dbt_backup"
+[0m01:51:18.380823 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.382470 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.382738 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.int_clinical_turnaround"} */
+alter view "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround__dbt_tmp" rename to "int_clinical_turnaround"
+[0m01:51:18.383415 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.384540 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: COMMIT
+[0m01:51:18.384796 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.385005 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: COMMIT
+[0m01:51:18.386463 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.387586 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.int_clinical_turnaround"
+[0m01:51:18.387829 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.int_clinical_turnaround"} */
+
+      drop view if exists "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround__dbt_backup" cascade
+    
+[0m01:51:18.389011 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.389945 [debug] [Thread-1 (]: On model.clinical_triage_analytics.int_clinical_turnaround: Close
+[0m01:51:18.390352 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFD4A09B0>]}
+[0m01:51:18.390792 [info ] [Thread-1 (]: 2 of 3 OK created sql view model main_int_clinical.int_clinical_turnaround ..... [[32mOK[0m in 0.02s]
+[0m01:51:18.391313 [debug] [Thread-1 (]: Finished running node model.clinical_triage_analytics.int_clinical_turnaround
+[0m01:51:18.391771 [debug] [Thread-1 (]: Began running node model.clinical_triage_analytics.fct_clinical_impact
+[0m01:51:18.392127 [info ] [Thread-1 (]: 3 of 3 START sql table model main_marts.fct_clinical_impact .................... [RUN]
+[0m01:51:18.392500 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.clinical_triage_analytics.int_clinical_turnaround, now model.clinical_triage_analytics.fct_clinical_impact)
+[0m01:51:18.392733 [debug] [Thread-1 (]: Began compiling node model.clinical_triage_analytics.fct_clinical_impact
+[0m01:51:18.394050 [debug] [Thread-1 (]: Writing injected SQL for node "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.395028 [debug] [Thread-1 (]: Began executing node model.clinical_triage_analytics.fct_clinical_impact
+[0m01:51:18.395722 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.396012 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.fct_clinical_impact"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_marts')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m01:51:18.396286 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:18.398186 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:18.433145 [debug] [Thread-1 (]: Writing runtime sql for node "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.434384 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.434687 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: BEGIN
+[0m01:51:18.435297 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.435565 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.435819 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.fct_clinical_impact"} */
+
+    
+
+    create  table
+      "clinical_warehouse"."main_marts"."fct_clinical_impact__dbt_tmp"
+  
+    
+    as (
+      WITH int_scans AS (
+    SELECT * FROM "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+)
+
+SELECT
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority,
+    COUNT(event_id) AS total_scans,
+    COUNT(CASE WHEN ai_flagged THEN 1 END) AS total_ai_alerts,
+    COUNT(CASE WHEN ai_detection_classification = 'TRUE_POSITIVE' THEN 1 END) AS true_positives,
+    COUNT(CASE WHEN ai_detection_classification = 'FALSE_POSITIVE' THEN 1 END) AS false_positives,
+    
+    -- Calculated Metrics
+    ROUND(
+        CAST(COUNT(CASE WHEN ai_detection_classification = 'TRUE_POSITIVE' THEN 1 END) AS DOUBLE) /
+        NULLIF(COUNT(CASE WHEN ai_flagged THEN 1 END), 0) * 100, 2
+    ) AS ai_precision_percentage,
+
+    ROUND(AVG(scan_to_ai_minutes), 2) AS avg_ai_processing_minutes,
+    ROUND(AVG(total_turnaround_minutes), 2) AS avg_turnaround_minutes,
+    
+    MEDIAN(total_turnaround_minutes) AS median_turnaround_minutes
+
+FROM int_scans
+GROUP BY
+    hospital_site_id,
+    modality,
+    finding_type,
+    clinical_priority
+    );
+    
+  
+[0m01:51:18.444156 [debug] [Thread-1 (]: SQL status: OK in 0.008 seconds
+[0m01:51:18.447930 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.448280 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.fct_clinical_impact"} */
+
+    SELECT index_name
+    FROM duckdb_indexes()
+    WHERE database_name = 'clinical_warehouse'
+      AND schema_name = 'main_marts'
+      AND table_name = 'fct_clinical_impact'
+  
+[0m01:51:18.449467 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.453082 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.453353 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.fct_clinical_impact"} */
+alter table "clinical_warehouse"."main_marts"."fct_clinical_impact" rename to "fct_clinical_impact__dbt_backup"
+[0m01:51:18.453948 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.455384 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.455613 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.fct_clinical_impact"} */
+alter table "clinical_warehouse"."main_marts"."fct_clinical_impact__dbt_tmp" rename to "fct_clinical_impact"
+[0m01:51:18.456153 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:18.463629 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: COMMIT
+[0m01:51:18.464041 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.464269 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: COMMIT
+[0m01:51:18.466449 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:18.467762 [debug] [Thread-1 (]: Using duckdb connection "model.clinical_triage_analytics.fct_clinical_impact"
+[0m01:51:18.468047 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "model.clinical_triage_analytics.fct_clinical_impact"} */
+
+      drop table if exists "clinical_warehouse"."main_marts"."fct_clinical_impact__dbt_backup" cascade
+    
+[0m01:51:18.469467 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:18.470426 [debug] [Thread-1 (]: On model.clinical_triage_analytics.fct_clinical_impact: Close
+[0m01:51:18.470834 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'a7833bc2-15f1-4286-a4b9-5d9fc66a8725', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFDC767D0>]}
+[0m01:51:18.471265 [info ] [Thread-1 (]: 3 of 3 OK created sql table model main_marts.fct_clinical_impact ............... [[32mOK[0m in 0.08s]
+[0m01:51:18.471755 [debug] [Thread-1 (]: Finished running node model.clinical_triage_analytics.fct_clinical_impact
+[0m01:51:18.472699 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:18.472917 [debug] [MainThread]: On master: BEGIN
+[0m01:51:18.473091 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m01:51:18.473650 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m01:51:18.473852 [debug] [MainThread]: On master: COMMIT
+[0m01:51:18.474022 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:18.474191 [debug] [MainThread]: On master: COMMIT
+[0m01:51:18.474529 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m01:51:18.474709 [debug] [MainThread]: On master: Close
+[0m01:51:18.474963 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m01:51:18.475132 [debug] [MainThread]: Connection 'create_clinical_warehouse_main_stg_clinical' was properly closed.
+[0m01:51:18.475271 [debug] [MainThread]: Connection 'list_clinical_warehouse_main_stg_clinical' was properly closed.
+[0m01:51:18.475401 [debug] [MainThread]: Connection 'model.clinical_triage_analytics.fct_clinical_impact' was properly closed.
+[0m01:51:18.475614 [info ] [MainThread]: 
+[0m01:51:18.475898 [info ] [MainThread]: Finished running 1 table model, 2 view models in 0 hours 0 minutes and 0.34 seconds (0.34s).
+[0m01:51:18.476563 [debug] [MainThread]: Command end result
+[0m01:51:18.498982 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m01:51:18.501041 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m01:51:18.502916 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m01:51:18.508243 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m01:51:18.508532 [info ] [MainThread]: 
+[0m01:51:18.508859 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m01:51:18.509123 [info ] [MainThread]: 
+[0m01:51:18.509364 [info ] [MainThread]: Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=3
+[0m01:51:18.510032 [debug] [MainThread]: Command `dbt run` succeeded at 01:51:18.509941 after 2.20 seconds
+[0m01:51:18.510298 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFCBF7A10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAF4CDA270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001AAFA953F50>]}
+[0m01:51:18.510546 [debug] [MainThread]: Flushing usage events
+[0m01:51:19.967398 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m01:51:22.448118 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855C65E270>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855ECDBED0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855ECDBB10>]}
+
+
+============================== 01:51:22.453032 | b681f08c-19cc-4065-8b1a-fdc93ab85387 ==============================
+[0m01:51:22.453032 [info ] [MainThread]: Running with dbt=1.12.6
+[0m01:51:22.453641 [debug] [MainThread]: running dbt with arguments {'maximum_seed_size_mib': '1', 'no_print': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'version_check': 'True', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'profiles_dir': '.', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'use_colors': 'True', 'hints_enabled': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'invocation_command': 'dbt test --project-dir . --profiles-dir .', 'log_path': 'logs'}
+[0m01:51:22.740083 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'b681f08c-19cc-4065-8b1a-fdc93ab85387', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855CB92190>]}
+[0m01:51:22.788669 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'b681f08c-19cc-4065-8b1a-fdc93ab85387', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855ECA9370>]}
+[0m01:51:22.791814 [info ] [MainThread]: Registered adapter: duckdb=1.11.1
+[0m01:51:22.926190 [debug] [MainThread]: checksum: fc917a09330ecea6a48ad9073b34d48ab2eeb7b9fc8eb5e89ddac47361a1f20a, vars: {}, profile: clinical_duckdb, target: dev, version: 1.12.6
+[0m01:51:23.051218 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m01:51:23.051554 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m01:51:23.051730 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m01:51:23.058777 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'b681f08c-19cc-4065-8b1a-fdc93ab85387', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855F59D750>]}
+[0m01:51:23.177344 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m01:51:23.180909 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m01:51:23.221974 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m01:51:23.250064 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'b681f08c-19cc-4065-8b1a-fdc93ab85387', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855F715C70>]}
+[0m01:51:23.250677 [info ] [MainThread]: Found 3 models, 7 data tests, 1 source, 511 macros
+[0m01:51:23.251372 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'b681f08c-19cc-4065-8b1a-fdc93ab85387', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855F4CFBD0>]}
+[0m01:51:23.252993 [info ] [MainThread]: 
+[0m01:51:23.253494 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m01:51:23.253893 [info ] [MainThread]: 
+[0m01:51:23.254470 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m01:51:23.255577 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_clinical_warehouse_main_marts'
+[0m01:51:23.295828 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m01:51:23.296354 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: BEGIN
+[0m01:51:23.296566 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m01:51:23.338870 [debug] [ThreadPool]: SQL status: OK in 0.042 seconds
+[0m01:51:23.339743 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_marts"
+[0m01:51:23.340350 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_marts"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_marts'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m01:51:23.382165 [debug] [ThreadPool]: SQL status: OK in 0.041 seconds
+[0m01:51:23.385135 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: ROLLBACK
+[0m01:51:23.386340 [debug] [ThreadPool]: On list_clinical_warehouse_main_marts: Close
+[0m01:51:23.387460 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_marts, now list_clinical_warehouse_main_int_clinical)
+[0m01:51:23.389541 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m01:51:23.390134 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: BEGIN
+[0m01:51:23.390577 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:23.391962 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:23.392492 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_int_clinical"
+[0m01:51:23.392947 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_int_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_int_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m01:51:23.398090 [debug] [ThreadPool]: SQL status: OK in 0.005 seconds
+[0m01:51:23.400361 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: ROLLBACK
+[0m01:51:23.401543 [debug] [ThreadPool]: On list_clinical_warehouse_main_int_clinical: Close
+[0m01:51:23.402527 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_clinical_warehouse_main_int_clinical, now list_clinical_warehouse_main_stg_clinical)
+[0m01:51:23.404950 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m01:51:23.405587 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: BEGIN
+[0m01:51:23.406035 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m01:51:23.407535 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m01:51:23.408787 [debug] [ThreadPool]: Using duckdb connection "list_clinical_warehouse_main_stg_clinical"
+[0m01:51:23.409602 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "connection_name": "list_clinical_warehouse_main_stg_clinical"} */
+select
+      'clinical_warehouse' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'main_stg_clinical'
+    and lower(table_catalog) = 'clinical_warehouse'
+  
+[0m01:51:23.416075 [debug] [ThreadPool]: SQL status: OK in 0.006 seconds
+[0m01:51:23.419057 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: ROLLBACK
+[0m01:51:23.420376 [debug] [ThreadPool]: On list_clinical_warehouse_main_stg_clinical: Close
+[0m01:51:23.422628 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'b681f08c-19cc-4065-8b1a-fdc93ab85387', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855FA78940>]}
+[0m01:51:23.423526 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:23.424077 [debug] [MainThread]: On master: BEGIN
+[0m01:51:23.424522 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m01:51:23.426168 [debug] [MainThread]: SQL status: OK in 0.002 seconds
+[0m01:51:23.427048 [debug] [MainThread]: On master: COMMIT
+[0m01:51:23.427900 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:23.428480 [debug] [MainThread]: On master: COMMIT
+[0m01:51:23.429855 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m01:51:23.430784 [debug] [MainThread]: On master: Close
+[0m01:51:23.436982 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m01:51:23.437767 [info ] [Thread-1 (]: 1 of 7 START test accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE  [RUN]
+[0m01:51:23.439421 [debug] [Thread-1 (]: Acquiring new duckdb connection 'test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0'
+[0m01:51:23.440067 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m01:51:23.474104 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m01:51:23.475312 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m01:51:23.476337 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m01:51:23.476651 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"} */
+select database_name, type from duckdb_databases()
+[0m01:51:23.476888 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m01:51:23.478013 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:23.479680 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m01:51:23.480455 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"} */
+
+                    select table_name, constraint_type from duckdb_constraints()
+                    where lower(database_name) = lower('clinical_warehouse')
+                      and lower(schema_name) = lower('main_dbt_test__audit')
+                      and constraint_type in ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+                    
+[0m01:51:23.482824 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:23.507486 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m01:51:23.509580 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m01:51:23.510201 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: BEGIN
+[0m01:51:23.511014 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds
+[0m01:51:23.511581 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"
+[0m01:51:23.512290 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+with all_values as (
+
+    select
+        ai_detection_classification as value_field,
+        count(*) as n_records
+
+    from "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+    group by ai_detection_classification
+
+)
+
+select *
+from all_values
+where value_field not in (
+    'TRUE_POSITIVE','FALSE_POSITIVE','FALSE_NEGATIVE','TRUE_NEGATIVE'
+)
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.523653 [debug] [Thread-1 (]: SQL status: OK in 0.010 seconds
+[0m01:51:23.532175 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: ROLLBACK
+[0m01:51:23.534254 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0: Close
+[0m01:51:23.535995 [info ] [Thread-1 (]: 1 of 7 PASS accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE  [[32mPASS[0m in 0.10s]
+[0m01:51:23.537857 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0
+[0m01:51:23.538811 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m01:51:23.539743 [info ] [Thread-1 (]: 2 of 7 START test accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE  [RUN]
+[0m01:51:23.541243 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.clinical_triage_analytics.accepted_values_int_clinical_turnaround_ai_detection_classification__TRUE_POSITIVE__FALSE_POSITIVE__FALSE_NEGATIVE__TRUE_NEGATIVE.d1c38a05b0, now test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683)
+[0m01:51:23.542289 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m01:51:23.579833 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m01:51:23.581156 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m01:51:23.583675 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m01:51:23.586504 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m01:51:23.587203 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: BEGIN
+[0m01:51:23.587772 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:23.589190 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:23.590001 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"
+[0m01:51:23.590776 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+with all_values as (
+
+    select
+        clinical_priority as value_field,
+        count(*) as n_records
+
+    from "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+    group by clinical_priority
+
+)
+
+select *
+from all_values
+where value_field not in (
+    'EMERGENCY','URGENT','ROUTINE'
+)
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.598151 [debug] [Thread-1 (]: SQL status: OK in 0.007 seconds
+[0m01:51:23.601096 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: ROLLBACK
+[0m01:51:23.602681 [debug] [Thread-1 (]: On test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683: Close
+[0m01:51:23.604178 [info ] [Thread-1 (]: 2 of 7 PASS accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE  [[32mPASS[0m in 0.06s]
+[0m01:51:23.605947 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683
+[0m01:51:23.606906 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m01:51:23.607992 [info ] [Thread-1 (]: 3 of 7 START test not_null_fct_clinical_impact_total_scans ..................... [RUN]
+[0m01:51:23.609722 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.clinical_triage_analytics.accepted_values_stg_clinical_scans_clinical_priority__EMERGENCY__URGENT__ROUTINE.d94ce52683, now test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc)
+[0m01:51:23.611152 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m01:51:23.631224 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m01:51:23.635300 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m01:51:23.639625 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m01:51:23.642636 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m01:51:23.643629 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: BEGIN
+[0m01:51:23.644355 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:23.646126 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:23.646765 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"
+[0m01:51:23.647057 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select total_scans
+from "clinical_warehouse"."main_marts"."fct_clinical_impact"
+where total_scans is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.648690 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:23.650914 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: ROLLBACK
+[0m01:51:23.652919 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc: Close
+[0m01:51:23.654416 [info ] [Thread-1 (]: 3 of 7 PASS not_null_fct_clinical_impact_total_scans ........................... [[32mPASS[0m in 0.04s]
+[0m01:51:23.656145 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc
+[0m01:51:23.656473 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m01:51:23.656788 [info ] [Thread-1 (]: 4 of 7 START test not_null_int_clinical_turnaround_event_id .................... [RUN]
+[0m01:51:23.657674 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.clinical_triage_analytics.not_null_fct_clinical_impact_total_scans.86537486bc, now test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a)
+[0m01:51:23.658319 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m01:51:23.663317 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m01:51:23.664614 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m01:51:23.669105 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m01:51:23.672376 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m01:51:23.673372 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: BEGIN
+[0m01:51:23.674196 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:23.676013 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:23.676932 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"
+[0m01:51:23.677749 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select event_id
+from "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+where event_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.682361 [debug] [Thread-1 (]: SQL status: OK in 0.004 seconds
+[0m01:51:23.683890 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: ROLLBACK
+[0m01:51:23.684612 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a: Close
+[0m01:51:23.685206 [info ] [Thread-1 (]: 4 of 7 PASS not_null_int_clinical_turnaround_event_id .......................... [[32mPASS[0m in 0.03s]
+[0m01:51:23.685988 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a
+[0m01:51:23.686901 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m01:51:23.688059 [info ] [Thread-1 (]: 5 of 7 START test not_null_stg_clinical_scans_event_id ......................... [RUN]
+[0m01:51:23.689313 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.clinical_triage_analytics.not_null_int_clinical_turnaround_event_id.edbd5d301a, now test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398)
+[0m01:51:23.689980 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m01:51:23.702711 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m01:51:23.704594 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m01:51:23.708058 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m01:51:23.710237 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m01:51:23.711064 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398: BEGIN
+[0m01:51:23.712014 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:23.713321 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:23.713819 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398"
+[0m01:51:23.714111 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select event_id
+from "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+where event_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.716629 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m01:51:23.717851 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398: ROLLBACK
+[0m01:51:23.718371 [debug] [Thread-1 (]: On test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398: Close
+[0m01:51:23.718846 [info ] [Thread-1 (]: 5 of 7 PASS not_null_stg_clinical_scans_event_id ............................... [[32mPASS[0m in 0.03s]
+[0m01:51:23.719475 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398
+[0m01:51:23.719764 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m01:51:23.720072 [info ] [Thread-1 (]: 6 of 7 START test unique_int_clinical_turnaround_event_id ...................... [RUN]
+[0m01:51:23.720557 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.clinical_triage_analytics.not_null_stg_clinical_scans_event_id.6cba202398, now test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f)
+[0m01:51:23.720831 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m01:51:23.726731 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m01:51:23.727744 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m01:51:23.729441 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m01:51:23.730933 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m01:51:23.731378 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: BEGIN
+[0m01:51:23.731700 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:23.732571 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:23.732984 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"
+[0m01:51:23.733263 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    event_id as unique_field,
+    count(*) as n_records
+
+from "clinical_warehouse"."main_int_clinical"."int_clinical_turnaround"
+where event_id is not null
+group by event_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.736760 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m01:51:23.737963 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: ROLLBACK
+[0m01:51:23.738484 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f: Close
+[0m01:51:23.738947 [info ] [Thread-1 (]: 6 of 7 PASS unique_int_clinical_turnaround_event_id ............................ [[32mPASS[0m in 0.02s]
+[0m01:51:23.739425 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f
+[0m01:51:23.739662 [debug] [Thread-1 (]: Began running node test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m01:51:23.739885 [info ] [Thread-1 (]: 7 of 7 START test unique_stg_clinical_scans_event_id ........................... [RUN]
+[0m01:51:23.740309 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.clinical_triage_analytics.unique_int_clinical_turnaround_event_id.b61dbdb09f, now test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1)
+[0m01:51:23.740535 [debug] [Thread-1 (]: Began compiling node test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m01:51:23.744881 [debug] [Thread-1 (]: Writing injected SQL for node "test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m01:51:23.746011 [debug] [Thread-1 (]: Began executing node test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m01:51:23.747968 [debug] [Thread-1 (]: Writing runtime sql for node "test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m01:51:23.749312 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m01:51:23.749653 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: BEGIN
+[0m01:51:23.749984 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m01:51:23.750792 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m01:51:23.751136 [debug] [Thread-1 (]: Using duckdb connection "test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"
+[0m01:51:23.751555 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: /* {"app": "dbt", "dbt_version": "1.12.6", "profile_name": "clinical_duckdb", "target_name": "dev", "node_id": "test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    event_id as unique_field,
+    count(*) as n_records
+
+from "clinical_warehouse"."main_stg_clinical"."stg_clinical_scans"
+where event_id is not null
+group by event_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m01:51:23.754772 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m01:51:23.756230 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: ROLLBACK
+[0m01:51:23.756710 [debug] [Thread-1 (]: On test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1: Close
+[0m01:51:23.757162 [info ] [Thread-1 (]: 7 of 7 PASS unique_stg_clinical_scans_event_id ................................. [[32mPASS[0m in 0.02s]
+[0m01:51:23.757677 [debug] [Thread-1 (]: Finished running node test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1
+[0m01:51:23.758965 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:23.759388 [debug] [MainThread]: On master: BEGIN
+[0m01:51:23.759741 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m01:51:23.760590 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m01:51:23.760838 [debug] [MainThread]: On master: COMMIT
+[0m01:51:23.761012 [debug] [MainThread]: Using duckdb connection "master"
+[0m01:51:23.761160 [debug] [MainThread]: On master: COMMIT
+[0m01:51:23.761487 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m01:51:23.761683 [debug] [MainThread]: On master: Close
+[0m01:51:23.762011 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m01:51:23.762255 [debug] [MainThread]: Connection 'list_clinical_warehouse_main_stg_clinical' was properly closed.
+[0m01:51:23.762421 [debug] [MainThread]: Connection 'test.clinical_triage_analytics.unique_stg_clinical_scans_event_id.9fff39d9f1' was properly closed.
+[0m01:51:23.762801 [info ] [MainThread]: 
+[0m01:51:23.763244 [info ] [MainThread]: Finished running 7 data tests in 0 hours 0 minutes and 0.51 seconds (0.51s).
+[0m01:51:23.765113 [debug] [MainThread]: Command end result
+[0m01:51:23.792829 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m01:51:23.795559 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m01:51:23.799442 [debug] [MainThread]: Wrote artifact OsiDocument to .\target\osi_document.json
+[0m01:51:23.806367 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m01:51:23.806706 [info ] [MainThread]: 
+[0m01:51:23.807490 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m01:51:23.808053 [info ] [MainThread]: 
+[0m01:51:23.808827 [info ] [MainThread]: Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=7
+[0m01:51:23.810105 [debug] [MainThread]: Command `dbt test` succeeded at 01:51:23.809995 after 1.50 seconds
+[0m01:51:23.810415 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855E9D6E10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855F453280>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002855F4538B0>]}
+[0m01:51:23.810654 [debug] [MainThread]: Flushing usage events
+[0m01:51:25.505549 [debug] [MainThread]: An error was encountered while trying to flush usage events
