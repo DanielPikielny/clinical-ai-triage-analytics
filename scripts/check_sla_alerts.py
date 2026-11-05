@@ -1,3 +1,4 @@
+import hashlib
 import os
 from datetime import datetime
 import duckdb
@@ -8,21 +9,35 @@ CONFIG_PATH = "config/alert_rules.yml"
 
 
 def load_config():
-    if not os.path.exists(CONFIG_PATH):
-        raise FileNotFoundError(
-            f"Alert configuration file not found at {CONFIG_PATH}"
-        )
     with open(CONFIG_PATH, "r") as f:
         return yaml.safe_load(f)
 
 
 def init_alert_history_table(conn):
     conn.execute("CREATE SCHEMA IF NOT EXISTS main_marts;")
+
+    # Check if table exists with old schema (missing alert_hash column)
+    tables = [
+        t[0]
+        for t in conn.execute("SHOW TABLES;").fetchall()
+        if "fct_alert_history" in t[0]
+    ]
+    if tables:
+        cols = [
+            c[0]
+            for c in conn.execute(
+                "DESCRIBE main_marts.fct_alert_history;"
+            ).fetchall()
+        ]
+        if "alert_hash" not in cols:
+            conn.execute("DROP TABLE main_marts.fct_alert_history;")
+
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS main_marts.fct_alert_history (
-            alert_id VARCHAR,
-            triggered_at TIMESTAMP,
+            alert_hash VARCHAR PRIMARY KEY,
+            first_detected_at TIMESTAMP,
+            last_detected_at TIMESTAMP,
             severity VARCHAR,
             hospital_site_id VARCHAR,
             finding_type VARCHAR,
@@ -30,153 +45,110 @@ def init_alert_history_table(conn):
             metric_name VARCHAR,
             observed_value DOUBLE,
             threshold_value DOUBLE,
-            alert_message VARCHAR
+            alert_message VARCHAR,
+            status VARCHAR
         );
     """
     )
 
 
+def generate_alert_hash(site, finding, priority, metric_name):
+    raw_str = f"{site}_{finding}_{priority}_{metric_name}"
+    return hashlib.md5(raw_str.encode()).hexdigest()[:12]
+
+
 def run_alert_engine():
     config = load_config()
-    global_rules = config["global_thresholds"]
+    rules = config["global_thresholds"]
     tat_targets = config["priority_tat_p95_targets_minutes"]
+    min_scans = rules.get("min_reviewed_scans", 5)
 
     conn = duckdb.connect(DB_PATH)
-
-    # Clean search_path without spaces after commas
-    conn.execute(
-        "SET search_path = 'main_marts,main_int_clinical,main_stg_clinical,main';"
-    )
-
+    conn.execute("SET search_path = 'main_marts,main_int_clinical,main_stg_clinical,main';")
     init_alert_history_table(conn)
 
-    print("Running AI Model & Operational SLA Monitoring Engine...\n")
+    print("Running Persistent AI Model & Operational SLA Monitoring Engine...\n")
 
-    query = """
+    query = f"""
         SELECT 
             hospital_site_id,
             finding_type,
             clinical_priority,
-            model_version,
-            total_scans,
             total_reviewed_scans,
             precision_pct,
             recall_sensitivity_pct,
             p95_turnaround_minutes,
             sla_compliance_pct
         FROM main_marts.fct_clinical_impact
-        WHERE total_reviewed_scans >= 5
+        WHERE total_reviewed_scans >= {min_scans}
     """
 
     df = conn.execute(query).df()
+    now_ts = datetime.now()
+    active_hashes = set()
+    current_alerts = []
 
-    alerts = []
-    timestamp_str = datetime.now()
+    for _, row in df.iterrows():
+        site, finding, priority = row["hospital_site_id"], row["finding_type"], row["clinical_priority"]
+        prec, rec, p95_tat, comp = row["precision_pct"], row["recall_sensitivity_pct"], row["p95_turnaround_minutes"], row["sla_compliance_pct"]
 
-    for idx, row in df.iterrows():
-        site = row["hospital_site_id"]
-        finding = row["finding_type"]
-        priority = row["clinical_priority"]
-        precision = row["precision_pct"]
-        recall = row["recall_sensitivity_pct"]
-        p95_tat = row["p95_turnaround_minutes"]
-        compliance = row["sla_compliance_pct"]
+        # 1. Precision Alerts
+        if prec is not None:
+            if prec < rules["precision_critical"]:
+                h = generate_alert_hash(site, finding, priority, "AI Precision")
+                active_hashes.add(h)
+                current_alerts.append((h, now_ts, now_ts, "CRITICAL", site, finding, priority, "AI Precision", prec, rules["precision_critical"], f"Precision dropped to {prec}% for {finding} at {site} (Critical < {rules['precision_critical']}%)", "ACTIVE"))
+            elif prec < rules["precision_warning"]:
+                h = generate_alert_hash(site, finding, priority, "AI Precision")
+                active_hashes.add(h)
+                current_alerts.append((h, now_ts, now_ts, "WARNING", site, finding, priority, "AI Precision", prec, rules["precision_warning"], f"Precision at {prec}% for {finding} at {site} (Warning < {rules['precision_warning']}%)", "ACTIVE"))
 
-        # 1. Precision Anomaly Check
-        if precision is not None:
-            if precision < global_rules["precision_critical"]:
-                alerts.append(
-                    (
-                        f"ALT_{idx:05d}_PREC",
-                        timestamp_str,
-                        "CRITICAL",
-                        site,
-                        finding,
-                        priority,
-                        "AI Precision",
-                        precision,
-                        global_rules["precision_critical"],
-                        f"CRITICAL: Precision dropped to {precision}% for {finding} at {site} (Threshold: {global_rules['precision_critical']}%)",
-                    )
-                )
-            elif precision < global_rules["precision_warning"]:
-                alerts.append(
-                    (
-                        f"ALT_{idx:05d}_PREC",
-                        timestamp_str,
-                        "WARNING",
-                        site,
-                        finding,
-                        priority,
-                        "AI Precision",
-                        precision,
-                        global_rules["precision_warning"],
-                        f"WARNING: Low Precision at {precision}% for {finding} at {site} (Threshold: {global_rules['precision_warning']}%)",
-                    )
-                )
+        # 2. Recall Alerts (Warning & Critical)
+        if rec is not None:
+            if rec < rules["recall_critical"]:
+                h = generate_alert_hash(site, finding, priority, "AI Recall")
+                active_hashes.add(h)
+                current_alerts.append((h, now_ts, now_ts, "CRITICAL", site, finding, priority, "AI Recall", rec, rules["recall_critical"], f"Recall dropped to {rec}% for {finding} at {site} (Critical < {rules['recall_critical']}%)", "ACTIVE"))
+            elif rec < rules["recall_warning"]:
+                h = generate_alert_hash(site, finding, priority, "AI Recall")
+                active_hashes.add(h)
+                current_alerts.append((h, now_ts, now_ts, "WARNING", site, finding, priority, "AI Recall", rec, rules["recall_warning"], f"Recall at {rec}% for {finding} at {site} (Warning < {rules['recall_warning']}%)", "ACTIVE"))
 
-        # 2. Recall (Sensitivity) Anomaly Check
-        if recall is not None:
-            if recall < global_rules["recall_critical"]:
-                alerts.append(
-                    (
-                        f"ALT_{idx:05d}_REC",
-                        timestamp_str,
-                        "CRITICAL",
-                        site,
-                        finding,
-                        priority,
-                        "AI Recall",
-                        recall,
-                        global_rules["recall_critical"],
-                        f"CRITICAL: Recall/Sensitivity dropped to {recall}% for {finding} at {site} (Threshold: {global_rules['recall_critical']}%)",
-                    )
-                )
+        # 3. SLA Compliance Alerts
+        if comp is not None:
+            if comp < rules["sla_compliance_critical"]:
+                h = generate_alert_hash(site, finding, priority, "SLA Compliance")
+                active_hashes.add(h)
+                current_alerts.append((h, now_ts, now_ts, "CRITICAL", site, finding, priority, "SLA Compliance", comp, rules["sla_compliance_critical"], f"SLA Compliance fell to {comp}% at {site} (Critical < {rules['sla_compliance_critical']}%)", "ACTIVE"))
 
-        # 3. p95 Turnaround Time Spike Check
+        # 4. p95 TAT Alerts
         target_tat = tat_targets.get(priority, 120)
         if p95_tat is not None and p95_tat > target_tat:
-            alerts.append(
-                (
-                    f"ALT_{idx:05d}_TAT",
-                    timestamp_str,
-                    "WARNING",
-                    site,
-                    finding,
-                    priority,
-                    "p95 Turnaround Time",
-                    p95_tat,
-                    target_tat,
-                    f"WARNING: p95 Turnaround latency ({p95_tat} min) exceeded {priority} SLA ({target_tat} min) at {site}",
-                )
-            )
+            h = generate_alert_hash(site, finding, priority, "p95 Turnaround Time")
+            active_hashes.add(h)
+            current_alerts.append((h, now_ts, now_ts, "WARNING", site, finding, priority, "p95 Turnaround Time", p95_tat, target_tat, f"p95 Latency ({p95_tat} min) exceeded {priority} SLA ({target_tat} min) at {site}", "ACTIVE"))
 
-    # Summary Display & Audit Log Ingestion
-    if alerts:
-        print(
-            f"🚨 ALERT ENGINE TRIGGERED: {len(alerts)} anomalies detected!\n"
-        )
-        print(
-            f"{'SEVERITY':<10} | {'SITE':<10} | {'METRIC':<20} | {'MESSAGE'}"
-        )
-        print("-" * 85)
-        for a in alerts:
-            print(f"{a[2]:<10} | {a[3]:<10} | {a[6]:<20} | {a[9]}")
-
-        # Persist alert logs to DuckDB table main_marts.fct_alert_history
-        conn.execute("DELETE FROM main_marts.fct_alert_history;")
-        conn.executemany(
+    # Upsert Active Alerts & Mark Resolved Alerts
+    for alert in current_alerts:
+        conn.execute(
             """
-            INSERT INTO main_marts.fct_alert_history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO main_marts.fct_alert_history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (alert_hash) DO UPDATE SET 
+                last_detected_at = EXCLUDED.last_detected_at,
+                observed_value = EXCLUDED.observed_value,
+                severity = EXCLUDED.severity,
+                status = 'ACTIVE';
         """,
-            alerts,
+            alert,
         )
-        print(
-            f"\n✓ Successfully logged {len(alerts)} alerts to main_marts.fct_alert_history."
-        )
-    else:
-        print("✓ All operational metrics within normal parameters.")
 
+    # Mark non-detected previously active alerts as RESOLVED
+    if active_hashes:
+        placeholders = ",".join([f"'{h}'" for h in active_hashes])
+        conn.execute(f"UPDATE main_marts.fct_alert_history SET status = 'RESOLVED' WHERE alert_hash NOT IN ({placeholders});")
+
+    active_count = conn.execute("SELECT count(*) FROM main_marts.fct_alert_history WHERE status = 'ACTIVE'").fetchone()[0]
+    print(f"✓ Alert Engine finished. Currently tracking {active_count} ACTIVE alerts in persistent audit history.")
     conn.close()
 
 

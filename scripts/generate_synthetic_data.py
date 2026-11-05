@@ -1,4 +1,5 @@
 import argparse
+import os
 import random
 from datetime import datetime, timedelta
 import duckdb
@@ -7,16 +8,15 @@ import pandas as pd
 
 DB_PATH = "data/clinical_warehouse.duckdb"
 
-FINDING_TYPES = [
-    "Intracranial Hemorrhage",
-    "Pulmonary Embolism",
-    "Acute Ischemic Stroke",
-    "Cervical Spine Fracture",
-    "Pneumothorax",
-]
+CLINICAL_CATALOG = {
+    "Intracranial Hemorrhage": {"modality": "CT", "default_priority": "EMERGENCY"},
+    "Pulmonary Embolism": {"modality": "CT", "default_priority": "EMERGENCY"},
+    "Acute Ischemic Stroke": {"modality": "MRI", "default_priority": "EMERGENCY"},
+    "Cervical Spine Fracture": {"modality": "CT", "default_priority": "URGENT"},
+    "Pneumothorax": {"modality": "XR", "default_priority": "URGENT"},
+}
 
 HOSPITAL_SITES = [f"HOSP_{i}" for i in range(101, 109)]
-MODALITIES = ["CT", "XR", "MRI"]
 VENDORS = ["GE Healthcare", "Siemens Healthineers", "Philips Healthcare"]
 
 
@@ -25,10 +25,7 @@ def parse_args():
         description="Generate synthetic clinical AI triage data."
     )
     parser.add_argument(
-        "--num-records",
-        type=int,
-        default=2000,
-        help="Number of records to generate",
+        "--num-records", type=int, default=2000, help="Number of records to generate"
     )
     parser.add_argument(
         "--seed", type=int, default=42, help="Random seed for reproducibility"
@@ -37,12 +34,7 @@ def parse_args():
         "--scenario",
         type=str,
         default="normal",
-        choices=[
-            "normal",
-            "model_degradation",
-            "hospital_overload",
-            "model_update",
-        ],
+        choices=["normal", "model_degradation", "hospital_overload", "model_update"],
         help="Simulated operational scenario",
     )
     return parser.parse_args()
@@ -64,87 +56,73 @@ def generate_data(num_records=2000, seed=42, scenario="normal"):
         accession_number = f"ACC_{random.randint(100000, 999999)}"
         patient_id = f"PAT_{random.randint(10000, 99999)}"
         site = random.choice(HOSPITAL_SITES)
-        finding = random.choice(FINDING_TYPES)
-        modality = random.choice(MODALITIES)
+        
+        # Enforce realistic clinical matrix pairing
+        finding = random.choice(list(CLINICAL_CATALOG.keys()))
+        modality = CLINICAL_CATALOG[finding]["modality"]
+        priority = CLINICAL_CATALOG[finding]["default_priority"]
+        
+        # 15% random variance in priority level for clinical triage realistic noise
+        if random.random() < 0.15:
+            priority = random.choice(["EMERGENCY", "URGENT", "ROUTINE"])
+
         vendor = random.choice(VENDORS)
-
-        # Priority distribution
-        priority = np.random.choice(
-            ["EMERGENCY", "URGENT", "ROUTINE"], p=[0.25, 0.45, 0.30]
-        )
-
-        # Time series timestamps over 30 days
         scan_offset_mins = random.randint(0, 30 * 24 * 60)
         scan_at = base_time + timedelta(minutes=scan_offset_mins)
 
-        # AI processing time (0.5 to 3 minutes)
+        # AI Processing Latency
         ai_proc_delay = round(random.uniform(0.5, 3.0), 2)
-        if scenario == "hospital_overload" and random.random() < 0.15:
-            ai_proc_delay += round(random.uniform(10.0, 30.0), 2)
+        if scenario == "hospital_overload" and site == "HOSP_104" and random.random() < 0.25:
+            ai_proc_delay += round(random.uniform(15.0, 45.0), 2)
         ai_processed_at = scan_at + timedelta(minutes=ai_proc_delay)
 
-        # Model Version Tagging
+        # Model Versioning & Performance Behavior Shift
         if scenario == "model_update":
-            # Transition to v1.2 midway through month
-            model_version = (
-                "v1.2"
-                if scan_at > (base_time + timedelta(days=15))
-                else "v1.0"
-            )
+            model_version = "v1.2" if scan_at > (base_time + timedelta(days=15)) else "v1.0"
         else:
             model_version = "v1.0"
 
-        # AI Confidence & Flagging Logic
-        base_confidence = random.uniform(0.10, 0.98)
+        # Well-Calibrated AI Confidence Score Simulation
+        # Ground truth status drives score distribution so confidence maps to accuracy
+        ground_truth_positive = random.random() < 0.35  # ~35% true disease prevalence
 
-        # Apply scenario logic to confidence/flagging
-        if (
-            scenario == "model_degradation"
-            and site == "HOSP_104"
-            and finding == "Pulmonary Embolism"
-        ):
-            # Model drift: lower confidence and higher false flags
-            base_confidence = random.uniform(0.40, 0.75)
+        if ground_truth_positive:
+            # Positive cases skewed toward higher confidence (mean ~0.85)
+            if scenario == "model_degradation" and site == "HOSP_104" and finding == "Pulmonary Embolism":
+                # Degraded model assigns low confidence to positive cases (high false negatives)
+                ai_confidence = round(float(np.clip(np.random.beta(2, 5), 0.05, 0.99)), 4)
+            elif scenario == "model_update" and model_version == "v1.2":
+                # Upgraded model produces sharper, well-separated confidence scores
+                ai_confidence = round(float(np.clip(np.random.beta(8, 2), 0.05, 0.99)), 4)
+            else:
+                ai_confidence = round(float(np.clip(np.random.beta(6, 2), 0.05, 0.99)), 4)
+        else:
+            # Negative cases skewed toward lower confidence (mean ~0.15)
+            if scenario == "model_degradation" and site == "HOSP_104" and finding == "Pulmonary Embolism":
+                # Degraded model assigns high confidence to negative cases (high false positives)
+                ai_confidence = round(float(np.clip(np.random.beta(4, 3), 0.05, 0.99)), 4)
+            else:
+                ai_confidence = round(float(np.clip(np.random.beta(1.5, 6), 0.05, 0.99)), 4)
 
-        ai_confidence = round(base_confidence, 4)
         ai_flagged = ai_confidence >= 0.60
 
-        # Ground Truth & Clinician Review Logic
-        # 10% of scans remain unreviewed (PENDING_REVIEW)
-        is_reviewed = random.random() > 0.10
+        # Clinician Review Workflow
+        is_reviewed = random.random() > 0.08  # 8% pending review cases
 
         if is_reviewed:
-            # Turnaround time generation
             if priority == "EMERGENCY":
                 tat_base = random.randint(15, 40)
             elif priority == "URGENT":
                 tat_base = random.randint(45, 110)
             else:
-                tat_base = random.randint(120, 300)
+                tat_base = random.randint(120, 280)
 
-            # Scenario adjustments for TAT
             if scenario == "hospital_overload" and site == "HOSP_101":
-                tat_base = int(tat_base * 2.5)  # Heavy review delays
+                tat_base = int(tat_base * 2.2)
 
             total_tat = max(int(ai_proc_delay + 1), tat_base)
             clinician_reviewed_at = scan_at + timedelta(minutes=total_tat)
-
-            # Clinician Agreement (Ground Truth Proxy)
-            if ai_flagged:
-                # Target ~80% baseline precision, lower in degradation scenario
-                true_pos_prob = (
-                    0.50
-                    if (
-                        scenario == "model_degradation"
-                        and site == "HOSP_104"
-                        and finding == "Pulmonary Embolism"
-                    )
-                    else 0.82
-                )
-                clinician_confirmed = random.random() < true_pos_prob
-            else:
-                # False negative rate ~3%
-                clinician_confirmed = random.random() < 0.03
+            clinician_confirmed = ground_truth_positive
         else:
             clinician_reviewed_at = None
             clinician_confirmed = None
@@ -188,24 +166,16 @@ def generate_data(num_records=2000, seed=42, scenario="normal"):
     ]
 
     df = pd.DataFrame(data, columns=columns)
-
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = duckdb.connect(DB_PATH)
-    conn.execute(
-        "TRUNCATE TABLE raw_staging.raw_ai_scans;"
-    )  # Clean table prior to seed
+    conn.execute("TRUNCATE TABLE raw_staging.raw_ai_scans;")
     conn.register("df_view", df)
-    conn.execute(
-        "INSERT INTO raw_staging.raw_ai_scans SELECT * FROM df_view;"
-    )
+    conn.execute("INSERT INTO raw_staging.raw_ai_scans SELECT * FROM df_view;")
     conn.close()
 
-    print(
-        f"✓ Successfully seeded {len(df)} records into raw_staging.raw_ai_scans!"
-    )
+    print(f"✓ Successfully seeded {len(df)} realistic records into raw_staging.raw_ai_scans!")
 
 
 if __name__ == "__main__":
     args = parse_args()
-    generate_data(
-        num_records=args.num_records, seed=args.seed, scenario=args.scenario
-    )
+    generate_data(num_records=args.num_records, seed=args.seed, scenario=args.scenario)

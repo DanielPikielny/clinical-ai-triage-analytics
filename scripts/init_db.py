@@ -1,22 +1,22 @@
+import os
 import duckdb
 
 DB_PATH = "data/clinical_warehouse.duckdb"
 
 
 def init_db():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = duckdb.connect(DB_PATH)
     print(f"Initializing DuckDB at {DB_PATH}...")
 
-    # Create Schemas
     conn.execute("CREATE SCHEMA IF NOT EXISTS raw_staging;")
     conn.execute("CREATE SCHEMA IF NOT EXISTS stg_clinical;")
     conn.execute("CREATE SCHEMA IF NOT EXISTS int_clinical;")
     conn.execute("CREATE SCHEMA IF NOT EXISTS marts;")
+    conn.execute("CREATE SCHEMA IF NOT EXISTS main_marts;")
 
-    # Drop existing table to ensure clean schema rebuild
     conn.execute("DROP TABLE IF EXISTS raw_staging.raw_ai_scans;")
 
-    # Raw AI Scans Ingestion Table (15 Columns)
     conn.execute(
         """
         CREATE TABLE raw_staging.raw_ai_scans (

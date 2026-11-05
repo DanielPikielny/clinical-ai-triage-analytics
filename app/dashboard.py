@@ -1,229 +1,135 @@
 import duckdb
+import numpy as np
 import pandas as pd
 import streamlit as st
 
 DB_PATH = "data/clinical_warehouse.duckdb"
 
-st.set_page_config(
-    page_title="Clinical AI Observability Platform",
-    page_icon="🏥",
-    layout="wide",
-)
+st.set_page_config(page_title="Clinical AI Observability Platform", page_icon="🏥", layout="wide")
 
 
 @st.cache_data(ttl=60)
 def load_data():
     conn = duckdb.connect(DB_PATH)
-    conn.execute(
-        "SET search_path = 'main_marts,main_int_clinical,main_stg_clinical,main';"
-    )
+    conn.execute("SET search_path = 'main_marts,main_int_clinical,main_stg_clinical,main';")
 
-    impact_df = conn.execute(
-        "SELECT * FROM main_marts.fct_clinical_impact"
-    ).df()
-
+    impact_df = conn.execute("SELECT * FROM main_marts.fct_clinical_impact").df()
+    
     alerts_df = pd.DataFrame()
+    drift_df = pd.DataFrame()
     tables = [t[0] for t in conn.execute("SHOW TABLES;").fetchall()]
-    if (
-        "fct_alert_history" in tables
-        or "main_marts.fct_alert_history" in tables
-    ):
-        alerts_df = conn.execute(
-            "SELECT * FROM main_marts.fct_alert_history ORDER BY triggered_at DESC"
-        ).df()
+    
+    if "fct_alert_history" in tables or "main_marts.fct_alert_history" in tables:
+        alerts_df = conn.execute("SELECT * FROM main_marts.fct_alert_history ORDER BY last_detected_at DESC").df()
 
-    raw_scans = conn.execute(
-        "SELECT * FROM main_stg_clinical.stg_clinical_scans"
-    ).df()
+    if "fct_model_drift" in tables or "main_marts.fct_model_drift" in tables:
+        drift_df = conn.execute("SELECT * FROM main_marts.fct_model_drift ORDER BY psi_score DESC").df()
+
+    int_df = conn.execute("SELECT * FROM main_int_clinical.int_clinical_turnaround").df()
     conn.close()
-    return impact_df, alerts_df, raw_scans
+    return impact_df, alerts_df, drift_df, int_df
 
 
 try:
-    df_impact, df_alerts, df_scans = load_data()
-except Exception as e:
-    st.error(
-        f"Unable to connect to DuckDB warehouse at {DB_PATH}. Please run `python scripts/run_pipeline.py` first."
-    )
+    df_impact, df_alerts, df_drift, df_int = load_data()
+except Exception:
+    st.error(f"Unable to connect to DuckDB warehouse at {DB_PATH}. Please run pipeline first.")
     st.stop()
 
-# Title Header
-st.title("🏥 Clinical AI Triage & Model Observability Platform")
-st.caption(
-    "Real-time monitoring of AI precision, sensitivity drift, SLA turnaround latency (p50/p90/p95), and multi-site operational anomalies."
-)
+st.title("Clinical AI Triage & Model Observability Platform")
+st.caption("Real-time clinical ML monitoring with direct record-level quantiles, persistent alert state, and Population Stability Index (PSI) drift tracking.")
 
-# Sidebar Filters
-st.sidebar.header("🔍 Global Slice Controls")
-sites = ["All"] + sorted(list(df_impact["hospital_site_id"].unique()))
+# Global Filters
+st.sidebar.header("Global Slice Controls")
+sites = ["All"] + sorted(list(df_int["hospital_site_id"].unique()))
 selected_site = st.sidebar.selectbox("Hospital Site", sites)
 
-findings = ["All"] + sorted(list(df_impact["finding_type"].unique()))
+findings = ["All"] + sorted(list(df_int["finding_type"].unique()))
 selected_finding = st.sidebar.selectbox("Finding Type", findings)
 
-versions = ["All"] + sorted(list(df_impact["model_version"].unique()))
+versions = ["All"] + sorted(list(df_int["model_version"].unique()))
 selected_version = st.sidebar.selectbox("AI Model Version", versions)
 
-# Filter Data
-filtered_df = df_impact.copy()
+filtered_int = df_int.copy()
 if selected_site != "All":
-    filtered_df = filtered_df[filtered_df["hospital_site_id"] == selected_site]
+    filtered_int = filtered_int[filtered_int["hospital_site_id"] == selected_site]
 if selected_finding != "All":
-    filtered_df = filtered_df[filtered_df["finding_type"] == selected_finding]
+    filtered_int = filtered_int[filtered_int["finding_type"] == selected_finding]
 if selected_version != "All":
-    filtered_df = filtered_df[filtered_df["model_version"] == selected_version]
+    filtered_int = filtered_int[filtered_int["model_version"] == selected_version]
 
-# High-Level Metrics Row
+reviewed_int = filtered_int[filtered_int["is_reviewed"] == True]
+
+total_scans = len(filtered_int)
+total_tp = reviewed_int["is_tp"].sum()
+total_fp = reviewed_int["is_fp"].sum()
+total_fn = reviewed_int["is_fn"].sum()
+
+calc_precision = round((total_tp / (total_tp + total_fp)) * 100.0, 1) if (total_tp + total_fp) > 0 else 0.0
+calc_recall = round((total_tp / (total_tp + total_fn)) * 100.0, 1) if (total_tp + total_fn) > 0 else 0.0
+
+p95_tat = round(np.percentile(reviewed_int["total_turnaround_minutes"].dropna(), 95), 1) if len(reviewed_int) > 0 else 0.0
+sla_comp = round((reviewed_int["met_sla"].sum() / len(reviewed_int)) * 100.0, 1) if len(reviewed_int) > 0 else 0.0
+
 col1, col2, col3, col4, col5 = st.columns(5)
-
-total_scans = filtered_df["total_scans"].sum()
-total_tp = filtered_df["true_positives"].sum()
-total_fp = filtered_df["false_positives"].sum()
-total_fn = filtered_df["false_negatives"].sum()
-
-avg_precision = (
-    round((total_tp / (total_tp + total_fp)) * 100.0, 1)
-    if (total_tp + total_fp) > 0
-    else 0.0
-)
-avg_recall = (
-    round((total_tp / (total_tp + total_fn)) * 100.0, 1)
-    if (total_tp + total_fn) > 0
-    else 0.0
-)
-p95_tat = round(filtered_df["p95_turnaround_minutes"].mean(), 1)
-sla_comp = round(filtered_df["sla_compliance_pct"].mean(), 1)
-
-col1.metric("Total Ingested Scans", f"{total_scans:,}")
-col2.metric(
-    "AI Precision",
-    f"{avg_precision}%",
-    delta="-3.2%" if avg_precision < 75 else "+0.5%",
-)
-col3.metric("Recall (Sensitivity)", f"{avg_recall}%")
-col4.metric("p95 Turnaround (TAT)", f"{p95_tat} min")
+col1.metric("Total Scans", f"{total_scans:,}")
+col2.metric("AI Precision", f"{calc_precision}%")
+col3.metric("Recall (Sensitivity)", f"{calc_recall}%")
+col4.metric("Record-Level p95 TAT", f"{p95_tat} min")
 col5.metric("SLA Compliance", f"{sla_comp}%")
 
 st.markdown("---")
 
-# Tab Layout
-tab1, tab2, tab3, tab4 = st.tabs(
-    [
-        "🚨 Anomaly Alert Feed",
-        "📊 Model Performance Matrix",
-        "⏱️ SLA & Percentile Latency",
-        "🔬 Confidence Calibration",
-    ]
-)
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "Persistent Alerts", 
+    "Statistical Model Drift (PSI)", 
+    "Model Performance Mart", 
+    "Latency Distribution", 
+    "Reliability & ECE Calibration"
+])
 
-# Tab 1: Alert Feed
 with tab1:
-    st.subheader("Active Operational & Model Drift Alerts")
+    st.subheader("Persistent Alert Audit Trail")
     if not df_alerts.empty:
-        crit_count = len(df_alerts[df_alerts["severity"] == "CRITICAL"])
-        warn_count = len(df_alerts[df_alerts["severity"] == "WARNING"])
-
-        st.warning(
-            f"Detected **{crit_count} Critical** and **{warn_count} Warning** anomalies across active clinical streams."
-        )
-
-        st.dataframe(
-            df_alerts[
-                [
-                    "triggered_at",
-                    "severity",
-                    "hospital_site_id",
-                    "finding_type",
-                    "metric_name",
-                    "observed_value",
-                    "threshold_value",
-                    "alert_message",
-                ]
-            ],
-            use_container_width=True,
-            hide_index=True,
-        )
+        active_alerts = df_alerts[df_alerts["status"] == "ACTIVE"]
+        st.warning(f"Currently tracking **{len(active_alerts)} ACTIVE alerts** across monitored streams.")
+        st.dataframe(df_alerts[["first_detected_at", "last_detected_at", "status", "severity", "hospital_site_id", "finding_type", "metric_name", "observed_value", "alert_message"]], use_container_width=True, hide_index=True)
     else:
-        st.success("✓ No active alerts. All clinical streams operating normally.")
+        st.success("✓ No active alerts.")
 
-# Tab 2: Model Performance Matrix
 with tab2:
-    st.subheader("ML Model Evaluation Breakdown")
-    st.markdown(
-        "Evaluate Precision, Recall/Sensitivity, Specificity, F1 Score, and False Negative Rates across hospital sites and model versions."
-    )
+    st.subheader("Population Stability Index (PSI) Distribution Shift Analysis")
+    st.markdown("PSI quantifies confidence distribution shifts between the baseline reference window and the monitoring window (PSI > 0.25 indicates critical drift).")
+    if not df_drift.empty:
+        st.dataframe(df_drift[["hospital_site_id", "finding_type", "baseline_samples", "target_samples", "psi_score", "drift_status", "evaluated_at"]], use_container_width=True, hide_index=True)
+    else:
+        st.info("No drift analysis data available.")
 
-    metrics_view = filtered_df[
-        [
-            "hospital_site_id",
-            "finding_type",
-            "clinical_priority",
-            "model_version",
-            "precision_pct",
-            "recall_sensitivity_pct",
-            "specificity_pct",
-            "f1_score_pct",
-            "false_negative_rate_pct",
-        ]
-    ].rename(
-        columns={
-            "hospital_site_id": "Site",
-            "finding_type": "Finding",
-            "clinical_priority": "Priority",
-            "model_version": "Version",
-            "precision_pct": "Precision (%)",
-            "recall_sensitivity_pct": "Recall (%)",
-            "specificity_pct": "Specificity (%)",
-            "f1_score_pct": "F1 (%)",
-            "false_negative_rate_pct": "False Neg Rate (%)",
-        }
-    )
-
-    st.dataframe(metrics_view, use_container_width=True, hide_index=True)
-
-# Tab 3: SLA & Latency
 with tab3:
-    st.subheader("Turnaround Time Distribution (p50 / p90 / p95)")
-    st.markdown(
-        "Comparing median (p50) against tail latency outliers (p90 / p95) to detect operational bottlenecks."
-    )
+    st.subheader("Aggregated Clinical Impact Mart")
+    st.dataframe(df_impact, use_container_width=True, hide_index=True)
 
-    tat_chart_df = filtered_df.groupby("hospital_site_id")[
-        [
-            "avg_turnaround_minutes",
-            "p50_turnaround_minutes",
-            "p90_turnaround_minutes",
-            "p95_turnaround_minutes",
-        ]
-    ].mean()
+with tab4:
+    st.subheader("Site Turnaround Comparison")
+    tat_chart_df = df_impact.groupby("hospital_site_id")[["p50_turnaround_minutes", "p90_turnaround_minutes", "p95_turnaround_minutes"]].mean()
     st.bar_chart(tat_chart_df)
 
-# Tab 4: Confidence Calibration
-with tab4:
-    st.subheader("AI Confidence Score vs Ground Truth Confirmation")
-    st.markdown(
-        "Analyzing whether higher AI model confidence scores correlate with higher radiologist confirmation rates."
-    )
+with tab5:
+    st.subheader("Model Confidence Reliability Diagram & ECE")
+    if "ai_confidence_score" in filtered_int.columns:
+        calib_df = reviewed_int.copy()
+        calib_df["conf_bin"] = pd.cut(calib_df["ai_confidence_score"], bins=np.linspace(0, 1, 11), include_lowest=True)
+        
+        rel_chart = calib_df.groupby("conf_bin", observed=False).agg(
+            avg_confidence=("ai_confidence_score", "mean"),
+            empirical_accuracy=("clinician_confirmed", "mean"),
+            count=("event_id", "count")
+        ).reset_index()
 
-    if "ai_confidence_score" in df_scans.columns:
-        scans_reviewed = df_scans[df_scans["is_reviewed"] == True].copy()
-        scans_reviewed["confidence_bucket"] = pd.cut(
-            scans_reviewed["ai_confidence_score"],
-            bins=[0.0, 0.4, 0.6, 0.8, 1.0],
-            labels=["< 40%", "40-60%", "60-80%", "80-100%"],
-        )
+        total_sample_count = rel_chart["count"].sum()
+        ece = ((rel_chart["count"] / total_sample_count) * (rel_chart["avg_confidence"] - rel_chart["empirical_accuracy"]).abs()).sum() * 100.0
 
-        calib_df = (
-            scans_reviewed.groupby("confidence_bucket")["clinician_confirmed"]
-            .mean()
-            .reset_index()
-        )
-        calib_df["clinician_confirmed"] = (
-            calib_df["clinician_confirmed"] * 100.0
-        )
-
-        st.line_chart(
-            calib_df.set_index("confidence_bucket")["clinician_confirmed"]
-        )
-    else:
-        st.info("Confidence score data unavailable.")
+        st.metric("Expected Calibration Error (ECE)", f"{round(ece, 2)}%")
+        rel_chart["conf_label"] = rel_chart["avg_confidence"].round(2)
+        chart_data = rel_chart.set_index("conf_label")[["empirical_accuracy", "avg_confidence"]]
+        st.line_chart(chart_data)

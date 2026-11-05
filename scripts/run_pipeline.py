@@ -1,23 +1,52 @@
+import argparse
 import subprocess
 import sys
 
 
-def run_step(command, description):
-    print(f"\nRunning Step: {description}...")
-    result = subprocess.run(command, shell=True)
+def run_command(cmd):
+    print(f"\n--- Running: {cmd} ---")
+    result = subprocess.run(cmd, shell=True)
     if result.returncode != 0:
-        print(f"Error during step: {description}")
+        print(f"Command failed: {cmd}")
         sys.exit(1)
-    print(f"{description} completed successfully!")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Master Orchestrator Pipeline"
+    )
+    parser.add_argument("--scenario", type=str, default="model_degradation")
+    parser.add_argument("--seed", type=int, default=42)
+    args = parser.parse_args()
+
+    py_exe = sys.executable
+
+    # 1. Infrastructure Initialization
+    run_command(f'"{py_exe}" scripts/init_db.py')
+
+    # 2. Historical Data Seeding & Event Stream Simulation
+    run_command(
+        f'"{py_exe}" scripts/generate_synthetic_data.py --scenario'
+        f" {args.scenario} --seed {args.seed}"
+    )
+    run_command(f'"{py_exe}" scripts/stream_producer.py')
+
+    # 3. dbt Transformations & Data Quality Assertions
+    run_command(f'"{py_exe}" -m dbt.cli.main run --project-dir . --profiles-dir .')
+    run_command(f'"{py_exe}" -m dbt.cli.main test --project-dir . --profiles-dir .')
+
+    # 4. Observability, Alerting & Drift Engines
+    run_command(f'"{py_exe}" scripts/check_sla_alerts.py')
+    run_command(f'"{py_exe}" scripts/detect_model_drift.py')
+    run_command(f'"{py_exe}" scripts/compare_model_versions.py')
+
+    # 5. Automated Pytest Test Suite Execution
+    run_command(f'"{py_exe}" -m pytest tests/')
+
+    print(
+        "\n✓ End-to-End Platform Execution Completed Successfully!"
+    )
 
 
 if __name__ == "__main__":
-    print("Starting End-to-End Clinical Analytics Pipeline...")
-    run_step("python scripts/init_db.py", "Database Initialization")
-    run_step(
-        "python scripts/generate_synthetic_data.py",
-        "Synthetic Data Generation",
-    )
-    run_step("dbt run --project-dir . --profiles-dir .", "dbt Model Execution")
-    run_step("dbt test --project-dir . --profiles-dir .", "dbt Data Quality Tests")
-    print("\nEntire Clinical Data Pipeline Executed Successfully!")
+    main()

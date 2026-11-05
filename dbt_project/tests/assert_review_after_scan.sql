@@ -1,11 +1,8 @@
--- Custom Singular Test: In dbt, a singular test fails if it returns ANY rows.
--- This test flags records where the clinician review timestamp occurs BEFORE the scan timestamp.
-
-SELECT
+-- Singular assertion verifying clinician review timestamp never precedes scan acquisition
+select
     event_id,
-    scan_at,
-    clinician_reviewed_at,
-    total_turnaround_minutes
-FROM {{ ref('stg_clinical_scans') }}
-WHERE clinician_reviewed_at IS NOT NULL
-  AND clinician_reviewed_at < scan_at
+    scan_timestamp,
+    clinician_reviewed_timestamp
+from {{ ref('stg_clinical_scans') }}
+where clinician_reviewed_timestamp is not null
+  and clinician_reviewed_timestamp < scan_timestamp
