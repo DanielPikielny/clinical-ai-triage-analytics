@@ -1,41 +1,36 @@
 version: 2
 
-sources:
-  - name: raw_staging
-    schema: raw_staging
-    tables:
-      - name: raw_ai_scans
-
 models:
   - name: stg_clinical_scans
-    description: "Cleaned staging view of AI triage scans."
+    description: "Cleansed and typed staging layer for raw DICOM AI triage logs."
     columns:
       - name: event_id
-        tests:
+        description: "Primary key for each scan event."
+        data_tests:
           - unique
           - not_null
       - name: clinical_priority
-        tests:
+        description: "Standardized priority level."
+        data_tests:
           - accepted_values:
-              arguments:
-                values: ['EMERGENCY', 'URGENT', 'ROUTINE']
+              values: ['EMERGENCY', 'URGENT', 'ROUTINE']
 
   - name: int_clinical_turnaround
-    description: "Intermediate model with AI classification and SLA metrics."
+    description: "Intermediate model containing turnaround calculations and full ML confusion matrix classifications."
     columns:
       - name: event_id
-        tests:
+        data_tests:
           - unique
           - not_null
-      - name: ai_detection_classification
-        tests:
+      - name: ai_classification
+        description: "ML confusion matrix outcome."
+        data_tests:
           - accepted_values:
-              arguments:
-                values: ['TRUE_POSITIVE', 'FALSE_POSITIVE', 'FALSE_NEGATIVE', 'TRUE_NEGATIVE']
+              values: ['TRUE_POSITIVE', 'FALSE_POSITIVE', 'TRUE_NEGATIVE', 'FALSE_NEGATIVE', 'PENDING_REVIEW']
 
   - name: fct_clinical_impact
-    description: "Marts table with aggregated clinical metrics by hospital site."
+    description: "Aggregated mart containing hospital site KPIs, ML evaluation metrics (Precision, Recall, F1, FNR), and percentile turnaround times."
     columns:
       - name: total_scans
-        tests:
+        data_tests:
           - not_null

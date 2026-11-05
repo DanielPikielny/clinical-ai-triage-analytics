@@ -1,0 +1,14 @@
+# Configurable Rule Definitions for AI Triage Observability
+
+global_thresholds:
+  precision_critical: 70.0      # Precision < 70% triggers CRITICAL
+  precision_warning: 80.0       # Precision < 80% triggers WARNING
+  recall_critical: 75.0         # Recall < 75% triggers CRITICAL
+  recall_warning: 85.0          # Recall < 85% triggers WARNING
+  sla_compliance_warning: 90.0  # Compliance < 90% triggers WARNING
+  sla_compliance_critical: 80.0 # Compliance < 80% triggers CRITICAL
+
+priority_tat_p95_targets_minutes:
+  EMERGENCY: 45
+  URGENT: 120
+  ROUTINE: 240

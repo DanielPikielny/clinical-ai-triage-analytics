@@ -1,19 +1,47 @@
-import os
 import duckdb
 
-# Ensure data folder exists
-os.makedirs("data", exist_ok=True)
+DB_PATH = "data/clinical_warehouse.duckdb"
 
-db_path = "data/clinical_warehouse.duckdb"
 
-print(f"Initializing DuckDB at {db_path}...")
-conn = duckdb.connect(db_path)
+def init_db():
+    conn = duckdb.connect(DB_PATH)
+    print(f"Initializing DuckDB at {DB_PATH}...")
 
-# Create organizational schemas inside DuckDB
-schemas = ["raw_staging", "stg_clinical", "int_clinical", "marts"]
-for schema in schemas:
-    conn.execute(f"CREATE SCHEMA IF NOT EXISTS {schema};")
-    print(f"  ✓ Created schema: {schema}")
+    # Create Schemas
+    conn.execute("CREATE SCHEMA IF NOT EXISTS raw_staging;")
+    conn.execute("CREATE SCHEMA IF NOT EXISTS stg_clinical;")
+    conn.execute("CREATE SCHEMA IF NOT EXISTS int_clinical;")
+    conn.execute("CREATE SCHEMA IF NOT EXISTS marts;")
 
-conn.close()
-print("Database initialized successfully!")
+    # Drop existing table to ensure clean schema rebuild
+    conn.execute("DROP TABLE IF EXISTS raw_staging.raw_ai_scans;")
+
+    # Raw AI Scans Ingestion Table (15 Columns)
+    conn.execute(
+        """
+        CREATE TABLE raw_staging.raw_ai_scans (
+            event_id VARCHAR PRIMARY KEY,
+            accession_number VARCHAR,
+            patient_id VARCHAR,
+            hospital_site_id VARCHAR,
+            modality VARCHAR,
+            finding_type VARCHAR,
+            clinical_priority VARCHAR,
+            scan_at TIMESTAMP,
+            ai_processed_at TIMESTAMP,
+            clinician_reviewed_at TIMESTAMP,
+            ai_flagged BOOLEAN,
+            clinician_confirmed BOOLEAN,
+            scanner_vendor VARCHAR,
+            model_version VARCHAR,
+            ai_confidence_score DOUBLE
+        );
+    """
+    )
+
+    print("✓ Schema and tables initialized successfully!")
+    conn.close()
+
+
+if __name__ == "__main__":
+    init_db()

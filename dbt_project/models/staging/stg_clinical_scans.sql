@@ -1,31 +1,25 @@
-WITH raw_scans AS (
-    SELECT * FROM {{ source('raw_staging', 'raw_ai_scans') }}
+with raw_data as (
+    select * from raw_staging.raw_ai_scans
 )
 
-SELECT
+select
     event_id,
     accession_number,
     patient_id,
     hospital_site_id,
     modality,
     finding_type,
-    clinical_priority,
-    
-    -- Timestamp conversions
-    TRY_CAST(scan_timestamp AS TIMESTAMP) AS scan_at,
-    TRY_CAST(ai_processed_timestamp AS TIMESTAMP) AS ai_processed_at,
-    TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP) AS clinician_reviewed_at,
-    
-    -- Boolean flags
+    upper(clinical_priority) as clinical_priority,
+    scan_at as scan_timestamp,
+    ai_processed_at as ai_processed_timestamp,
+    clinician_reviewed_at as clinician_reviewed_timestamp,
     ai_flagged,
     clinician_confirmed,
-    
-    -- Extract values from JSON payload
-    json_extract_string(raw_json_payload, '$.scanner_vendor') AS scanner_vendor,
-    CAST(json_extract_string(raw_json_payload, '$.ai_confidence_score') AS DOUBLE) AS ai_confidence_score,
-
-    -- Calculate core intervals in minutes
-    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(ai_processed_timestamp AS TIMESTAMP)) AS scan_to_ai_minutes,
-    DATEDIFF('minute', TRY_CAST(scan_timestamp AS TIMESTAMP), TRY_CAST(clinician_reviewed_timestamp AS TIMESTAMP)) AS total_turnaround_minutes
-
-FROM raw_scans
+    scanner_vendor,
+    model_version,
+    ai_confidence_score,
+    case 
+        when clinician_reviewed_at is not null then true 
+        else false 
+    end as is_reviewed
+from raw_data

@@ -1,39 +1,43 @@
-WITH stg_scans AS (
-    SELECT * FROM {{ ref('stg_clinical_scans') }}
+with staging as (
+    select * from {{ ref('stg_clinical_scans') }}
+),
+
+classified as (
+    select
+        *,
+        date_diff('minute', scan_timestamp, clinician_reviewed_timestamp) as total_turnaround_minutes,
+        date_diff('second', scan_timestamp, ai_processed_timestamp) / 60.0 as ai_processing_minutes,
+
+        -- Standardized SLA Target (Minutes)
+        case 
+            when clinical_priority = 'EMERGENCY' then 45
+            when clinical_priority = 'URGENT' then 120
+            else 240
+        end as target_sla_minutes,
+
+        -- ML Confusion Matrix Classifications
+        case
+            when is_reviewed = false then 'PENDING_REVIEW'
+            when ai_flagged = true and clinician_confirmed = true then 'TRUE_POSITIVE'
+            when ai_flagged = true and clinician_confirmed = false then 'FALSE_POSITIVE'
+            when ai_flagged = false and clinician_confirmed = false then 'TRUE_NEGATIVE'
+            when ai_flagged = false and clinician_confirmed = true then 'FALSE_NEGATIVE'
+        end as ai_classification,
+
+        -- Confusion Matrix Binary Flags
+        case when is_reviewed = true and ai_flagged = true and clinician_confirmed = true then 1 else 0 end as is_tp,
+        case when is_reviewed = true and ai_flagged = true and clinician_confirmed = false then 1 else 0 end as is_fp,
+        case when is_reviewed = true and ai_flagged = false and clinician_confirmed = false then 1 else 0 end as is_tn,
+        case when is_reviewed = true and ai_flagged = false and clinician_confirmed = true then 1 else 0 end as is_fn,
+        case when is_reviewed = false then 1 else 0 end as is_pending
+    from staging
 )
 
-SELECT
-    event_id,
-    accession_number,
-    patient_id,
-    hospital_site_id,
-    modality,
-    finding_type,
-    clinical_priority,
-    scan_at,
-    ai_processed_at,
-    clinician_reviewed_at,
-    ai_flagged,
-    clinician_confirmed,
-    scanner_vendor,
-    ai_confidence_score,
-    scan_to_ai_minutes,
-    total_turnaround_minutes,
-
-    -- Classify detection accuracy
-    CASE
-        WHEN ai_flagged AND clinician_confirmed THEN 'TRUE_POSITIVE'
-        WHEN ai_flagged AND NOT clinician_confirmed THEN 'FALSE_POSITIVE'
-        WHEN NOT ai_flagged AND clinician_confirmed THEN 'FALSE_NEGATIVE'
-        ELSE 'TRUE_NEGATIVE'
-    END AS ai_detection_classification,
-
-    -- Categorize SLA / Turnaround Performance
-    CASE
-        WHEN total_turnaround_minutes IS NULL THEN 'PENDING_REVIEW'
-        WHEN total_turnaround_minutes <= 30 THEN 'WITHIN_TARGET'
-        WHEN total_turnaround_minutes <= 60 THEN 'MODERATE_DELAY'
-        ELSE 'SEVERE_DELAY'
-    END AS turnaround_performance_category
-
-FROM stg_scans
+select
+    *,
+    case 
+        when is_reviewed = true and total_turnaround_minutes <= target_sla_minutes then true
+        when is_reviewed = true and total_turnaround_minutes > target_sla_minutes then false
+        else null
+    end as met_sla
+from classified

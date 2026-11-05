@@ -1,80 +1,184 @@
+import os
+from datetime import datetime
 import duckdb
+import yaml
 
 DB_PATH = "data/clinical_warehouse.duckdb"
-
-PRECISION_THRESHOLDS = {
-    "Intracranial Hemorrhage": 75.0,
-    "Pulmonary Embolism": 70.0,
-    "Acute Ischemic Stroke": 75.0,
-    "Cervical Spine Fracture": 65.0,
-    "Pneumothorax": 65.0,
-}
-
-TAT_THRESHOLDS_MINS = {"EMERGENCY": 45.0, "URGENT": 120.0, "ROUTINE": 240.0}
+CONFIG_PATH = "config/alert_rules.yml"
 
 
-def check_alerts():
+def load_config():
+    if not os.path.exists(CONFIG_PATH):
+        raise FileNotFoundError(
+            f"Alert configuration file not found at {CONFIG_PATH}"
+        )
+    with open(CONFIG_PATH, "r") as f:
+        return yaml.safe_load(f)
+
+
+def init_alert_history_table(conn):
+    conn.execute("CREATE SCHEMA IF NOT EXISTS main_marts;")
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS main_marts.fct_alert_history (
+            alert_id VARCHAR,
+            triggered_at TIMESTAMP,
+            severity VARCHAR,
+            hospital_site_id VARCHAR,
+            finding_type VARCHAR,
+            clinical_priority VARCHAR,
+            metric_name VARCHAR,
+            observed_value DOUBLE,
+            threshold_value DOUBLE,
+            alert_message VARCHAR
+        );
+    """
+    )
+
+
+def run_alert_engine():
+    config = load_config()
+    global_rules = config["global_thresholds"]
+    tat_targets = config["priority_tat_p95_targets_minutes"]
+
     conn = duckdb.connect(DB_PATH)
 
-    print("================================================")
-    print("CLINICAL SLA & AI MODEL MONITORS RUNNING...")
-    print("================================================\n")
+    # Clean search_path without spaces after commas
+    conn.execute(
+        "SET search_path = 'main_marts,main_int_clinical,main_stg_clinical,main';"
+    )
+
+    init_alert_history_table(conn)
+
+    print("Running AI Model & Operational SLA Monitoring Engine...\n")
 
     query = """
         SELECT 
-            hospital_site_id, 
-            modality,
-            finding_type, 
+            hospital_site_id,
+            finding_type,
             clinical_priority,
+            model_version,
             total_scans,
-            total_ai_alerts,
-            ai_precision_percentage, 
-            avg_turnaround_minutes
-        FROM main_marts.fct_clinical_impact;
+            total_reviewed_scans,
+            precision_pct,
+            recall_sensitivity_pct,
+            p95_turnaround_minutes,
+            sla_compliance_pct
+        FROM main_marts.fct_clinical_impact
+        WHERE total_reviewed_scans >= 5
     """
 
-    results = conn.execute(query).fetchall()
-    precision_alerts = 0
-    tat_alerts = 0
+    df = conn.execute(query).df()
 
-    for (
-        site,
-        modality,
-        finding,
-        priority,
-        total_scans,
-        alerts,
-        precision,
-        tat,
-    ) in results:
-        target_precision = PRECISION_THRESHOLDS.get(finding, 70.0)
-        if precision is not None and precision < target_precision:
-            print(
-                f"[PRECISION BREACH] Site: {site} | Finding: {finding} ({modality})"
-            )
-            print(
-                f"   ↳ Precision: {precision}% (Target: >={target_precision}% across {alerts} alerts)\n"
-            )
-            precision_alerts += 1
+    alerts = []
+    timestamp_str = datetime.now()
 
-        target_tat = TAT_THRESHOLDS_MINS.get(priority, 180.0)
-        if tat is not None and tat > target_tat:
-            print(
-                f"[TAT SLA BREACH] Site: {site} | Priority: {priority} ({finding})"
-            )
-            print(
-                f"   ↳ Avg TAT: {tat} mins (Target: <={target_tat} mins across {total_scans} scans)\n"
-            )
-            tat_alerts += 1
+    for idx, row in df.iterrows():
+        site = row["hospital_site_id"]
+        finding = row["finding_type"]
+        priority = row["clinical_priority"]
+        precision = row["precision_pct"]
+        recall = row["recall_sensitivity_pct"]
+        p95_tat = row["p95_turnaround_minutes"]
+        compliance = row["sla_compliance_pct"]
 
-    print("==================================================")
-    print("SUMMARY OF CLINICAL MONITORING RESULTS:")
-    print(f"  • Total Precision Alerts: {precision_alerts}")
-    print(f"  • Total Turnaround SLA Breaches: {tat_alerts}")
-    print("==================================================")
+        # 1. Precision Anomaly Check
+        if precision is not None:
+            if precision < global_rules["precision_critical"]:
+                alerts.append(
+                    (
+                        f"ALT_{idx:05d}_PREC",
+                        timestamp_str,
+                        "CRITICAL",
+                        site,
+                        finding,
+                        priority,
+                        "AI Precision",
+                        precision,
+                        global_rules["precision_critical"],
+                        f"CRITICAL: Precision dropped to {precision}% for {finding} at {site} (Threshold: {global_rules['precision_critical']}%)",
+                    )
+                )
+            elif precision < global_rules["precision_warning"]:
+                alerts.append(
+                    (
+                        f"ALT_{idx:05d}_PREC",
+                        timestamp_str,
+                        "WARNING",
+                        site,
+                        finding,
+                        priority,
+                        "AI Precision",
+                        precision,
+                        global_rules["precision_warning"],
+                        f"WARNING: Low Precision at {precision}% for {finding} at {site} (Threshold: {global_rules['precision_warning']}%)",
+                    )
+                )
+
+        # 2. Recall (Sensitivity) Anomaly Check
+        if recall is not None:
+            if recall < global_rules["recall_critical"]:
+                alerts.append(
+                    (
+                        f"ALT_{idx:05d}_REC",
+                        timestamp_str,
+                        "CRITICAL",
+                        site,
+                        finding,
+                        priority,
+                        "AI Recall",
+                        recall,
+                        global_rules["recall_critical"],
+                        f"CRITICAL: Recall/Sensitivity dropped to {recall}% for {finding} at {site} (Threshold: {global_rules['recall_critical']}%)",
+                    )
+                )
+
+        # 3. p95 Turnaround Time Spike Check
+        target_tat = tat_targets.get(priority, 120)
+        if p95_tat is not None and p95_tat > target_tat:
+            alerts.append(
+                (
+                    f"ALT_{idx:05d}_TAT",
+                    timestamp_str,
+                    "WARNING",
+                    site,
+                    finding,
+                    priority,
+                    "p95 Turnaround Time",
+                    p95_tat,
+                    target_tat,
+                    f"WARNING: p95 Turnaround latency ({p95_tat} min) exceeded {priority} SLA ({target_tat} min) at {site}",
+                )
+            )
+
+    # Summary Display & Audit Log Ingestion
+    if alerts:
+        print(
+            f"🚨 ALERT ENGINE TRIGGERED: {len(alerts)} anomalies detected!\n"
+        )
+        print(
+            f"{'SEVERITY':<10} | {'SITE':<10} | {'METRIC':<20} | {'MESSAGE'}"
+        )
+        print("-" * 85)
+        for a in alerts:
+            print(f"{a[2]:<10} | {a[3]:<10} | {a[6]:<20} | {a[9]}")
+
+        # Persist alert logs to DuckDB table main_marts.fct_alert_history
+        conn.execute("DELETE FROM main_marts.fct_alert_history;")
+        conn.executemany(
+            """
+            INSERT INTO main_marts.fct_alert_history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        """,
+            alerts,
+        )
+        print(
+            f"\n✓ Successfully logged {len(alerts)} alerts to main_marts.fct_alert_history."
+        )
+    else:
+        print("✓ All operational metrics within normal parameters.")
 
     conn.close()
 
 
 if __name__ == "__main__":
-    check_alerts()
+    run_alert_engine()
