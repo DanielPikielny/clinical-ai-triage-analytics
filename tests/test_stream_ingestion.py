@@ -1,53 +1,71 @@
-import sys
-import os
-import random
-import time
-from datetime import datetime, timedelta
-
-# Ensure project root is in sys.path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from scripts.ingest_events import ingest_event_batch
-
-FINDING_TYPES = [
-    "Pulmonary Embolism",
-    "Intracranial Hemorrhage",
-    "Acute Ischemic Stroke",
-]
-HOSPITALS = ["HOSP_101", "HOSP_102", "HOSP_103", "HOSP_104"]
+import pytest
+from datetime import datetime
+from scripts.ingest_events import validate_event_payload, ingest_event_batch
 
 
-def generate_live_event(event_index):
-    now = datetime.now()
-    finding = random.choice(FINDING_TYPES)
-
-    return {
-        "event_id": f"EVT_LIVE_{event_index:05d}",
-        "accession_number": f"ACC_{random.randint(100000, 999999)}",
-        "patient_id": f"PAT_{random.randint(10000, 99999)}",
-        "hospital_site_id": random.choice(HOSPITALS),
+def test_valid_event_schema():
+    valid_payload = {
+        "event_id": "EVT_TEST_01",
+        "accession_number": "ACC_123",
+        "patient_id": "PAT_123",
+        "hospital_site_id": "HOSP_101",
         "modality": "CT",
-        "finding_type": finding,
+        "finding_type": "Pulmonary Embolism",
         "clinical_priority": "EMERGENCY",
-        "scan_at": now.isoformat(),
-        "ai_processed_at": (now + timedelta(seconds=45)).isoformat(),
-        "ai_flagged": random.random() > 0.5,
-        "ai_confidence_score": round(random.uniform(0.4, 0.98), 4),
-        "scanner_vendor": "Siemens Healthineers",
-        "model_version": "v1.2",
+        "scan_at": "2026-05-01T12:00:00",
+        "ai_confidence_score": 0.85,
+    }
+    assert validate_event_payload(valid_payload) is True
+
+
+def test_confidence_score_out_of_bounds():
+    invalid_payload = {
+        "event_id": "EVT_TEST_02",
+        "accession_number": "ACC_123",
+        "patient_id": "PAT_123",
+        "hospital_site_id": "HOSP_101",
+        "modality": "CT",
+        "finding_type": "Pulmonary Embolism",
+        "clinical_priority": "EMERGENCY",
+        "scan_at": "2026-05-01T12:00:00",
+        "ai_confidence_score": 1.5,  # Out of range (> 1.0)
+    }
+    with pytest.raises(ValueError, match="ai_confidence_score must be numeric between 0.0 and 1.0"):
+        validate_event_payload(invalid_payload)
+
+
+def test_invalid_clinical_priority():
+    invalid_payload = {
+        "event_id": "EVT_TEST_03",
+        "accession_number": "ACC_123",
+        "patient_id": "PAT_123",
+        "hospital_site_id": "HOSP_101",
+        "modality": "CT",
+        "finding_type": "Pulmonary Embolism",
+        "clinical_priority": "SUPER_CRITICAL",  # Invalid priority
+        "scan_at": "2026-05-01T12:00:00",
+    }
+    with pytest.raises(ValueError, match="Invalid clinical_priority"):
+        validate_event_payload(invalid_payload)
+
+
+def test_ingest_batch_metrics_return():
+    valid_event = {
+        "event_id": "EVT_TEST_METRIC_1",
+        "accession_number": "ACC_123",
+        "patient_id": "PAT_123",
+        "hospital_site_id": "HOSP_101",
+        "modality": "CT",
+        "finding_type": "Pulmonary Embolism",
+        "clinical_priority": "EMERGENCY",
+        "scan_at": datetime.now().isoformat(),
+        "ai_confidence_score": 0.90,
+    }
+    invalid_event = {
+        "event_id": "EVT_TEST_METRIC_2",
+        "modality": "CT",  # Missing fields
     }
 
-
-def start_streaming_producer(num_events=10, delay_seconds=0.2):
-    print(f"Starting Live Event Stream Producer ({num_events} events)...\n")
-
-    for i in range(1, num_events + 1):
-        event = generate_live_event(i)
-        ingest_event_batch([event])
-        time.sleep(delay_seconds)
-
-    print("\n✓ Live event stream simulation complete!")
-
-
-if __name__ == "__main__":
-    start_streaming_producer(num_events=10)
+    results = ingest_event_batch([valid_event, invalid_event])
+    assert results["accepted_count"] == 1
+    assert results["rejected_count"] == 1

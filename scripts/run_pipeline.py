@@ -12,9 +12,7 @@ def run_command(cmd):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Master Orchestrator Pipeline"
-    )
+    parser = argparse.ArgumentParser(description="Master Orchestrator Pipeline")
     parser.add_argument("--scenario", type=str, default="model_degradation")
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
@@ -24,28 +22,23 @@ def main():
     # 1. Infrastructure Initialization
     run_command(f'"{py_exe}" scripts/init_db.py')
 
-    # 2. Historical Data Seeding & Event Stream Simulation
-    run_command(
-        f'"{py_exe}" scripts/generate_synthetic_data.py --scenario'
-        f" {args.scenario} --seed {args.seed}"
-    )
+    # 2. Synthetic Data Seeding & Event Stream Simulation
+    run_command(f'"{py_exe}" scripts/generate_synthetic_data.py --scenario {args.scenario} --seed {args.seed}')
     run_command(f'"{py_exe}" scripts/stream_producer.py')
 
-    # 3. dbt Transformations & Data Quality Assertions
-    run_command(f'"{py_exe}" -m dbt.cli.main run --project-dir . --profiles-dir .')
+    # 3. Incremental dbt Transformations (with full-refresh on pipeline reset) & Tests
+    run_command(f'"{py_exe}" -m dbt.cli.main run --project-dir . --profiles-dir . --full-refresh')
     run_command(f'"{py_exe}" -m dbt.cli.main test --project-dir . --profiles-dir .')
 
-    # 4. Observability, Alerting & Drift Engines
+    # 4. Alerting & Statistical Drift Detection
     run_command(f'"{py_exe}" scripts/check_sla_alerts.py')
     run_command(f'"{py_exe}" scripts/detect_model_drift.py')
     run_command(f'"{py_exe}" scripts/compare_model_versions.py')
 
-    # 5. Automated Pytest Test Suite Execution
+    # 5. Automated Pytest Test Suite
     run_command(f'"{py_exe}" -m pytest tests/')
 
-    print(
-        "\n✓ End-to-End Platform Execution Completed Successfully!"
-    )
+    print("\n✓ End-to-End Pipeline Execution Completed Successfully!")
 
 
 if __name__ == "__main__":

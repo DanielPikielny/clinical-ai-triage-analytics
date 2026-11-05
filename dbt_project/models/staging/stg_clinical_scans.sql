@@ -8,8 +8,8 @@
 with raw_data as (
     select * from raw_staging.raw_ai_scans
     {% if is_incremental() %}
-        -- Only process scans newer than the max existing timestamp in staging
-        where scan_at > (select max(scan_timestamp) from {{ this }})
+        -- 3-day overlapping window ensures delayed clinician reviews update existing records
+        where scan_at >= (select coalesce(max(scan_timestamp) - interval '3 days', '1970-01-01'::timestamp) from {{ this }})
     {% endif %}
 )
 

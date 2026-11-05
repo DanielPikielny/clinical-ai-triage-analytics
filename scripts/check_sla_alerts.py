@@ -15,29 +15,22 @@ def load_config():
 
 def init_alert_history_table(conn):
     conn.execute("CREATE SCHEMA IF NOT EXISTS main_marts;")
-
-    # Check if table exists with old schema (missing alert_hash column)
-    tables = [
-        t[0]
-        for t in conn.execute("SHOW TABLES;").fetchall()
-        if "fct_alert_history" in t[0]
-    ]
+    
+    # Drop table if legacy schema lacks model_version or resolved_at
+    tables = [t[0] for t in conn.execute("SHOW TABLES;").fetchall() if "fct_alert_history" in t[0]]
     if tables:
-        cols = [
-            c[0]
-            for c in conn.execute(
-                "DESCRIBE main_marts.fct_alert_history;"
-            ).fetchall()
-        ]
-        if "alert_hash" not in cols:
+        cols = [c[0] for c in conn.execute("DESCRIBE main_marts.fct_alert_history;").fetchall()]
+        if "model_version" not in cols or "resolved_at" not in cols:
             conn.execute("DROP TABLE main_marts.fct_alert_history;")
 
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS main_marts.fct_alert_history (
             alert_hash VARCHAR PRIMARY KEY,
+            model_version VARCHAR,
             first_detected_at TIMESTAMP,
             last_detected_at TIMESTAMP,
+            resolved_at TIMESTAMP,
             severity VARCHAR,
             hospital_site_id VARCHAR,
             finding_type VARCHAR,
@@ -52,8 +45,9 @@ def init_alert_history_table(conn):
     )
 
 
-def generate_alert_hash(site, finding, priority, metric_name):
-    raw_str = f"{site}_{finding}_{priority}_{metric_name}"
+def generate_alert_hash(site, finding, priority, metric_name, model_version):
+    # Unique alert identity includes model_version to prevent cross-version collisions
+    raw_str = f"{site}_{finding}_{priority}_{metric_name}_{model_version}"
     return hashlib.md5(raw_str.encode()).hexdigest()[:12]
 
 
@@ -74,6 +68,7 @@ def run_alert_engine():
             hospital_site_id,
             finding_type,
             clinical_priority,
+            model_version,
             total_reviewed_scans,
             precision_pct,
             recall_sensitivity_pct,
@@ -89,63 +84,82 @@ def run_alert_engine():
     current_alerts = []
 
     for _, row in df.iterrows():
-        site, finding, priority = row["hospital_site_id"], row["finding_type"], row["clinical_priority"]
+        site, finding, priority, version = row["hospital_site_id"], row["finding_type"], row["clinical_priority"], row["model_version"]
         prec, rec, p95_tat, comp = row["precision_pct"], row["recall_sensitivity_pct"], row["p95_turnaround_minutes"], row["sla_compliance_pct"]
 
-        # 1. Precision Alerts
+        # 1. Precision Thresholds
         if prec is not None:
             if prec < rules["precision_critical"]:
-                h = generate_alert_hash(site, finding, priority, "AI Precision")
+                h = generate_alert_hash(site, finding, priority, "AI Precision", version)
                 active_hashes.add(h)
-                current_alerts.append((h, now_ts, now_ts, "CRITICAL", site, finding, priority, "AI Precision", prec, rules["precision_critical"], f"Precision dropped to {prec}% for {finding} at {site} (Critical < {rules['precision_critical']}%)", "ACTIVE"))
+                current_alerts.append((h, version, now_ts, now_ts, None, "CRITICAL", site, finding, priority, "AI Precision", prec, rules["precision_critical"], f"Precision dropped to {prec}% for {finding} at {site} ({version})", "ACTIVE"))
             elif prec < rules["precision_warning"]:
-                h = generate_alert_hash(site, finding, priority, "AI Precision")
+                h = generate_alert_hash(site, finding, priority, "AI Precision", version)
                 active_hashes.add(h)
-                current_alerts.append((h, now_ts, now_ts, "WARNING", site, finding, priority, "AI Precision", prec, rules["precision_warning"], f"Precision at {prec}% for {finding} at {site} (Warning < {rules['precision_warning']}%)", "ACTIVE"))
+                current_alerts.append((h, version, now_ts, now_ts, None, "WARNING", site, finding, priority, "AI Precision", prec, rules["precision_warning"], f"Precision at {prec}% for {finding} at {site} ({version})", "ACTIVE"))
 
-        # 2. Recall Alerts (Warning & Critical)
+        # 2. Recall Thresholds
         if rec is not None:
             if rec < rules["recall_critical"]:
-                h = generate_alert_hash(site, finding, priority, "AI Recall")
+                h = generate_alert_hash(site, finding, priority, "AI Recall", version)
                 active_hashes.add(h)
-                current_alerts.append((h, now_ts, now_ts, "CRITICAL", site, finding, priority, "AI Recall", rec, rules["recall_critical"], f"Recall dropped to {rec}% for {finding} at {site} (Critical < {rules['recall_critical']}%)", "ACTIVE"))
+                current_alerts.append((h, version, now_ts, now_ts, None, "CRITICAL", site, finding, priority, "AI Recall", rec, rules["recall_critical"], f"Recall dropped to {rec}% for {finding} at {site} ({version})", "ACTIVE"))
             elif rec < rules["recall_warning"]:
-                h = generate_alert_hash(site, finding, priority, "AI Recall")
+                h = generate_alert_hash(site, finding, priority, "AI Recall", version)
                 active_hashes.add(h)
-                current_alerts.append((h, now_ts, now_ts, "WARNING", site, finding, priority, "AI Recall", rec, rules["recall_warning"], f"Recall at {rec}% for {finding} at {site} (Warning < {rules['recall_warning']}%)", "ACTIVE"))
+                current_alerts.append((h, version, now_ts, now_ts, None, "WARNING", site, finding, priority, "AI Recall", rec, rules["recall_warning"], f"Recall at {rec}% for {finding} at {site} ({version})", "ACTIVE"))
 
-        # 3. SLA Compliance Alerts
+        # 3. Configured SLA Compliance Thresholds
         if comp is not None:
             if comp < rules["sla_compliance_critical"]:
-                h = generate_alert_hash(site, finding, priority, "SLA Compliance")
+                h = generate_alert_hash(site, finding, priority, "SLA Compliance", version)
                 active_hashes.add(h)
-                current_alerts.append((h, now_ts, now_ts, "CRITICAL", site, finding, priority, "SLA Compliance", comp, rules["sla_compliance_critical"], f"SLA Compliance fell to {comp}% at {site} (Critical < {rules['sla_compliance_critical']}%)", "ACTIVE"))
+                current_alerts.append((h, version, now_ts, now_ts, None, "CRITICAL", site, finding, priority, "SLA Compliance", comp, rules["sla_compliance_critical"], f"SLA Compliance fell to {comp}% at {site} ({version})", "ACTIVE"))
+            elif comp < rules["sla_compliance_warning"]:
+                h = generate_alert_hash(site, finding, priority, "SLA Compliance", version)
+                active_hashes.add(h)
+                current_alerts.append((h, version, now_ts, now_ts, None, "WARNING", site, finding, priority, "SLA Compliance", comp, rules["sla_compliance_warning"], f"SLA Compliance at {comp}% at {site} ({version})", "ACTIVE"))
 
-        # 4. p95 TAT Alerts
+        # 4. p95 TAT Latency Thresholds
         target_tat = tat_targets.get(priority, 120)
         if p95_tat is not None and p95_tat > target_tat:
-            h = generate_alert_hash(site, finding, priority, "p95 Turnaround Time")
+            h = generate_alert_hash(site, finding, priority, "p95 Turnaround Time", version)
             active_hashes.add(h)
-            current_alerts.append((h, now_ts, now_ts, "WARNING", site, finding, priority, "p95 Turnaround Time", p95_tat, target_tat, f"p95 Latency ({p95_tat} min) exceeded {priority} SLA ({target_tat} min) at {site}", "ACTIVE"))
+            current_alerts.append((h, version, now_ts, now_ts, None, "WARNING", site, finding, priority, "p95 Turnaround Time", p95_tat, target_tat, f"p95 Latency ({p95_tat} min) exceeded {priority} SLA ({target_tat} min) at {site}", "ACTIVE"))
 
-    # Upsert Active Alerts & Mark Resolved Alerts
+    # Upsert Active Alerts
     for alert in current_alerts:
         conn.execute(
             """
-            INSERT INTO main_marts.fct_alert_history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO main_marts.fct_alert_history VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (alert_hash) DO UPDATE SET 
                 last_detected_at = EXCLUDED.last_detected_at,
                 observed_value = EXCLUDED.observed_value,
                 severity = EXCLUDED.severity,
-                status = 'ACTIVE';
+                status = 'ACTIVE',
+                resolved_at = NULL;
         """,
             alert,
         )
 
-    # Mark non-detected previously active alerts as RESOLVED
+    # UNCONDITIONAL RESOLUTION UPDATE: Resolves alerts even if active_hashes is empty
     if active_hashes:
         placeholders = ",".join([f"'{h}'" for h in active_hashes])
-        conn.execute(f"UPDATE main_marts.fct_alert_history SET status = 'RESOLVED' WHERE alert_hash NOT IN ({placeholders});")
+        conn.execute(
+            f"""
+            UPDATE main_marts.fct_alert_history 
+            SET status = 'RESOLVED', resolved_at = '{now_ts}' 
+            WHERE alert_hash NOT IN ({placeholders}) AND status = 'ACTIVE';
+            """
+        )
+    else:
+        conn.execute(
+            f"""
+            UPDATE main_marts.fct_alert_history 
+            SET status = 'RESOLVED', resolved_at = '{now_ts}' 
+            WHERE status = 'ACTIVE';
+            """
+        )
 
     active_count = conn.execute("SELECT count(*) FROM main_marts.fct_alert_history WHERE status = 'ACTIVE'").fetchone()[0]
     print(f"✓ Alert Engine finished. Currently tracking {active_count} ACTIVE alerts in persistent audit history.")

@@ -4,10 +4,12 @@ from datetime import datetime
 import duckdb
 
 DB_PATH = "data/clinical_warehouse.duckdb"
+VALID_PRIORITIES = {"EMERGENCY", "URGENT", "ROUTINE"}
+VALID_MODALITIES = {"CT", "MRI", "XR", "US"}
 
 
 def validate_event_payload(payload):
-    """Enforces JSON event schema contract."""
+    """Enforces strict value boundaries, field types, and range constraints."""
     required_fields = [
         "event_id",
         "accession_number",
@@ -19,17 +21,43 @@ def validate_event_payload(payload):
         "scan_at",
     ]
     for field in required_fields:
-        if field not in payload:
-            raise ValueError(f"Missing required schema field: {field}")
+        if field not in payload or payload[field] is None:
+            raise ValueError(f"Missing required field: {field}")
+
+    if not str(payload["event_id"]).strip():
+        raise ValueError("event_id cannot be empty")
+
+    if payload["modality"] not in VALID_MODALITIES:
+        raise ValueError(f"Invalid modality: {payload['modality']}")
+
+    if str(payload["clinical_priority"]).upper() not in VALID_PRIORITIES:
+        raise ValueError(
+            f"Invalid clinical_priority: {payload['clinical_priority']}"
+        )
+
+    conf = payload.get("ai_confidence_score")
+    if conf is not None:
+        if not isinstance(conf, (int, float)) or not (0.0 <= float(conf) <= 1.0):
+            raise ValueError(
+                f"ai_confidence_score must be numeric between 0.0 and 1.0, got: {conf}"
+            )
+
+    try:
+        datetime.fromisoformat(str(payload["scan_at"]).replace("Z", "+00:00"))
+    except Exception:
+        raise ValueError(f"Invalid scan_at ISO timestamp: {payload['scan_at']}")
+
     return True
 
 
 def ingest_event_batch(events_json_list):
-    """Ingests a micro-batch of JSON events into DuckDB using idempotent upserts."""
+    """Ingests micro-batches into DuckDB and returns structured execution metrics."""
     conn = duckdb.connect(DB_PATH)
     conn.execute("CREATE SCHEMA IF NOT EXISTS raw_staging;")
 
-    valid_records = []
+    accepted_records = []
+    errors = []
+
     for raw_event in events_json_list:
         try:
             payload = (
@@ -39,7 +67,7 @@ def ingest_event_batch(events_json_list):
             )
             validate_event_payload(payload)
 
-            valid_records.append(
+            accepted_records.append(
                 (
                     payload["event_id"],
                     payload["accession_number"],
@@ -47,7 +75,7 @@ def ingest_event_batch(events_json_list):
                     payload["hospital_site_id"],
                     payload["modality"],
                     payload["finding_type"],
-                    payload["clinical_priority"],
+                    str(payload["clinical_priority"]).upper(),
                     payload["scan_at"],
                     payload.get("ai_processed_at"),
                     payload.get("clinician_reviewed_at"),
@@ -59,9 +87,11 @@ def ingest_event_batch(events_json_list):
                 )
             )
         except Exception as e:
-            print(f"Event validation failed: {e}")
+            errors.append(
+                {"event_id": payload.get("event_id", "UNKNOWN"), "error": str(e)}
+            )
 
-    if valid_records:
+    if accepted_records:
         conn.executemany(
             """
             INSERT INTO raw_staging.raw_ai_scans VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -72,15 +102,26 @@ def ingest_event_batch(events_json_list):
                 clinician_confirmed = EXCLUDED.clinician_confirmed,
                 ai_confidence_score = EXCLUDED.ai_confidence_score;
         """,
-            valid_records,
+            accepted_records,
         )
-        print(f"✓ Successfully ingested {len(valid_records)} streaming events.")
 
     conn.close()
 
+    result_summary = {
+        "accepted_count": len(accepted_records),
+        "rejected_count": len(errors),
+        "errors": errors,
+    }
+
+    if accepted_records:
+        print(
+            f"✓ Ingested {result_summary['accepted_count']} events (Rejected:"
+            f" {result_summary['rejected_count']})."
+        )
+    return result_summary
+
 
 if __name__ == "__main__":
-    # Test execution with dummy JSON payload
     sample_event = {
         "event_id": "EVT_STRM_001",
         "accession_number": "ACC_999999",
@@ -90,8 +131,6 @@ if __name__ == "__main__":
         "finding_type": "Pulmonary Embolism",
         "clinical_priority": "EMERGENCY",
         "scan_at": datetime.now().isoformat(),
-        "ai_processed_at": datetime.now().isoformat(),
-        "ai_flagged": True,
         "ai_confidence_score": 0.94,
     }
     ingest_event_batch([sample_event])
