@@ -17,6 +17,20 @@ def test_valid_event_schema():
     }
     assert validate_event_payload(valid_payload) is True
 
+def test_malformed_json_string_ingestion_safety():
+    # Verify malformed JSON strings don't cause UnboundLocalError in exception handler
+    malformed_json = "{ invalid json string ... "
+    results = ingest_event_batch([malformed_json])
+    
+    assert results["accepted_count"] == 0
+    assert results["rejected_count"] == 1
+    assert results["errors"][0]["event_id"] == "UNKNOWN"
+
+def test_non_dict_json_ingestion_safety():
+    # Verify valid JSON literals that aren't objects (e.g. integer or list) are rejected safely
+    results = ingest_event_batch(["12345"])
+    assert results["accepted_count"] == 0
+    assert results["rejected_count"] == 1
 
 def test_confidence_score_out_of_bounds():
     invalid_payload = {

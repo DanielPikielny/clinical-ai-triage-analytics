@@ -14,12 +14,10 @@ def calculate_psi(baseline, target, num_bins=10):
     baseline_counts, _ = np.histogram(baseline, bins=bins)
     target_counts, _ = np.histogram(target, bins=bins)
 
-    # Convert to proportions with small epsilon to prevent log(0)
     eps = 1e-4
     P = (target_counts / len(target)) + eps
     Q = (baseline_counts / len(baseline)) + eps
 
-    # Normalize after adding epsilon
     P = P / np.sum(P)
     Q = Q / np.sum(Q)
 
@@ -36,7 +34,6 @@ def run_drift_detection():
 
     print("Running Statistical Model Drift Engine (PSI Analysis)...\n")
 
-    # Load raw records with confidence scores
     df = conn.execute(
         """
         SELECT 
@@ -55,7 +52,6 @@ def run_drift_detection():
         conn.close()
         return
 
-    # Define Baseline (First 15 Days) vs Target Window (Last 15 Days)
     min_date = df["scan_timestamp"].min()
     mid_date = min_date + timedelta(days=15)
 
@@ -64,21 +60,23 @@ def run_drift_detection():
 
     drift_results = []
 
-    # Calculate PSI per Site and Finding Type
-    for (site, finding), group in df.groupby(
-        ["hospital_site_id", "finding_type"]
+    # Explicitly group by site, finding, AND model_version to prevent cross-version score mixing
+    for (site, finding, version), group in df.groupby(
+        ["hospital_site_id", "finding_type", "model_version"]
     ):
         base_scores = baseline_df[
             (baseline_df["hospital_site_id"] == site)
             & (baseline_df["finding_type"] == finding)
+            & (baseline_df["model_version"] == version)
         ]["ai_confidence_score"]
 
         target_scores = target_df[
             (target_df["hospital_site_id"] == site)
             & (target_df["finding_type"] == finding)
+            & (target_df["model_version"] == version)
         ]["ai_confidence_score"]
 
-        if len(base_scores) >= 15 and len(target_scores) >= 15:
+        if len(base_scores) >= 10 and len(target_scores) >= 10:
             psi_score = calculate_psi(base_scores, target_scores)
 
             if psi_score >= 0.25:
@@ -92,6 +90,7 @@ def run_drift_detection():
                 (
                     site,
                     finding,
+                    version,
                     len(base_scores),
                     len(target_scores),
                     round(psi_score, 4),
@@ -105,6 +104,7 @@ def run_drift_detection():
         columns=[
             "hospital_site_id",
             "finding_type",
+            "model_version",
             "baseline_samples",
             "target_samples",
             "psi_score",
@@ -113,13 +113,21 @@ def run_drift_detection():
         ],
     )
 
-    # Persist drift analysis table into DuckDB
     conn.execute("CREATE SCHEMA IF NOT EXISTS main_marts;")
+    
+    # Check if table schema needs updating to include model_version
+    tables = [t[0] for t in conn.execute("SHOW TABLES;").fetchall() if "fct_model_drift" in t[0]]
+    if tables:
+        cols = [c[0] for c in conn.execute("DESCRIBE main_marts.fct_model_drift;").fetchall()]
+        if "model_version" not in cols:
+            conn.execute("DROP TABLE main_marts.fct_model_drift;")
+
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS main_marts.fct_model_drift (
             hospital_site_id VARCHAR,
             finding_type VARCHAR,
+            model_version VARCHAR,
             baseline_samples INT,
             target_samples INT,
             psi_score DOUBLE,
@@ -134,18 +142,17 @@ def run_drift_detection():
         "INSERT INTO main_marts.fct_model_drift SELECT * FROM df_drift;"
     )
 
-    # Display Top Drift Findings
-    print(f"{'SITE':<10} | {'FINDING':<25} | {'PSI SCORE':<10} | {'STATUS'}")
+    print(f"{'SITE':<10} | {'FINDING':<22} | {'VER':<6} | {'PSI':<8} | {'STATUS'}")
     print("-" * 65)
     for _, r in results_df.sort_values(
         by="psi_score", ascending=False
     ).head(10).iterrows():
         print(
-            f"{r['hospital_site_id']:<10} | {r['finding_type']:<25} | {r['psi_score']:<10} | {r['drift_status']}"
+            f"{r['hospital_site_id']:<10} | {r['finding_type']:<22} | {r['model_version']:<6} | {r['psi_score']:<8} | {r['drift_status']}"
         )
 
     print(
-        f"\n✓ Successfully logged {len(results_df)} drift evaluations to main_marts.fct_model_drift."
+        f"\n✓ Logged {len(results_df)} model-version drift evaluations to main_marts.fct_model_drift."
     )
     conn.close()
 

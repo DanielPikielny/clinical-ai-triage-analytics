@@ -26,19 +26,20 @@ def main():
     run_command(f'"{py_exe}" scripts/generate_synthetic_data.py --scenario {args.scenario} --seed {args.seed}')
     run_command(f'"{py_exe}" scripts/stream_producer.py')
 
-    # 3. Incremental dbt Transformations (with full-refresh on pipeline reset) & Tests
+    # 3. Incremental dbt Transformations & Tests
     run_command(f'"{py_exe}" -m dbt.cli.main run --project-dir . --profiles-dir . --full-refresh')
     run_command(f'"{py_exe}" -m dbt.cli.main test --project-dir . --profiles-dir .')
 
-    # 4. Alerting & Statistical Drift Detection
+    # 4. Alerting, Drift Detection & Root-Cause Incident Diagnostics
     run_command(f'"{py_exe}" scripts/check_sla_alerts.py')
     run_command(f'"{py_exe}" scripts/detect_model_drift.py')
     run_command(f'"{py_exe}" scripts/compare_model_versions.py')
+    run_command(f'"{py_exe}" scripts/analyze_incident.py')
 
     # 5. Automated Pytest Test Suite
     run_command(f'"{py_exe}" -m pytest tests/')
 
-    print("\n✓ End-to-End Pipeline Execution Completed Successfully!")
+    print("\n✓ End-to-End Pipeline & Incident Diagnostics Execution Completed Successfully!")
 
 
 if __name__ == "__main__":

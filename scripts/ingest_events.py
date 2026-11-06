@@ -10,6 +10,9 @@ VALID_MODALITIES = {"CT", "MRI", "XR", "US"}
 
 def validate_event_payload(payload):
     """Enforces strict value boundaries, field types, and range constraints."""
+    if not isinstance(payload, dict):
+        raise ValueError("Event payload must be a JSON object (dictionary)")
+
     required_fields = [
         "event_id",
         "accession_number",
@@ -51,7 +54,7 @@ def validate_event_payload(payload):
 
 
 def ingest_event_batch(events_json_list):
-    """Ingests micro-batches into DuckDB and returns structured execution metrics."""
+    """Ingests micro-batches into DuckDB with safe payload exception isolation."""
     conn = duckdb.connect(DB_PATH)
     conn.execute("CREATE SCHEMA IF NOT EXISTS raw_staging;")
 
@@ -59,12 +62,17 @@ def ingest_event_batch(events_json_list):
     errors = []
 
     for raw_event in events_json_list:
+        payload = None
+        event_id = "UNKNOWN"
         try:
-            payload = (
-                json.loads(raw_event)
-                if isinstance(raw_event, str)
-                else raw_event
-            )
+            if isinstance(raw_event, str):
+                payload = json.loads(raw_event)
+            else:
+                payload = raw_event
+
+            if isinstance(payload, dict):
+                event_id = payload.get("event_id", "UNKNOWN")
+
             validate_event_payload(payload)
 
             accepted_records.append(
@@ -87,9 +95,7 @@ def ingest_event_batch(events_json_list):
                 )
             )
         except Exception as e:
-            errors.append(
-                {"event_id": payload.get("event_id", "UNKNOWN"), "error": str(e)}
-            )
+            errors.append({"event_id": event_id, "error": str(e)})
 
     if accepted_records:
         conn.executemany(
@@ -115,7 +121,7 @@ def ingest_event_batch(events_json_list):
 
     if accepted_records:
         print(
-            f"✓ Ingested {result_summary['accepted_count']} events (Rejected:"
+            f"Ingested {result_summary['accepted_count']} events (Rejected:"
             f" {result_summary['rejected_count']})."
         )
     return result_summary
